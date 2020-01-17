@@ -1,13 +1,13 @@
 ### Introduction
-For Victorious Secret, we are committed to creating a friendly and respectful place for learning, teaching and contributing. 
+For DSCI522 Group 309, we are committed to creating a friendly and respectful place for learning, teaching and contributing. 
 All participants in our team and communications are expected to show respect and courtesy to everyone.
 
-To make clear what is expected, everyone participating in the Victorious Secret project is required to conform to the Code of Conduct. 
+To make clear what is expected, everyone participating in the  DSCI 522 Group 309 project is required to conform to the Code of Conduct. 
 This Code of Conduct applies to all spaces but not limited to, team meetings, email communication, and online forums such as Slack and GitHub. Every member of the Victorious Secret team is expected to assist with the enforcement of the Code of Conduct.
 
 
-### The Victorious Secret Code of Conduct
-For Victorious Secret, we are dedicated to providing a welcoming and supportive environment for all people, regardless of background or identity. As such, we do not tolerate behaviour that is disrespectful or that excludes, intimidates, or causes discomfort to others. We do not tolerate discrimination or harassment based on characteristics that include, but are not limited to, gender identity and expression, sexual orientation, disability, physical appearance, body size, citizenship, nationality, ethnic or social origin, pregnancy, familial status, veteran status, genetic information, religion or belief (or lack thereof), membership of a national minority, property, age, education, socio-economic status, technical choices, and experience level.
+### The DSCI522 Group 309 Code of Conduct
+For DSCI522 Group 309, we are dedicated to providing a welcoming and supportive environment for all people, regardless of background or identity. As such, we do not tolerate behaviour that is disrespectful or that excludes, intimidates, or causes discomfort to others. We do not tolerate discrimination or harassment based on characteristics that include, but are not limited to, gender identity and expression, sexual orientation, disability, physical appearance, body size, citizenship, nationality, ethnic or social origin, pregnancy, familial status, veteran status, genetic information, religion or belief (or lack thereof), membership of a national minority, property, age, education, socio-economic status, technical choices, and experience level.
 
 
 #### 2.1 Expected Behavior
@@ -42,12 +42,12 @@ publication of private communication without consent
 
 #### 2.3 Consequences of Unacceptable Behavior
 
-Participants who are asked to stop any inappropriate behavior are expected to comply immediately. This applies to any Victorious Secret meetings and platforms, either online or in-person. If a participant engages in behavior that violates this code of conduct, other team members may warn the offender and or engage the DSCI 532 Instructor to investigate the Code of Conduct violation and impose appropriate sanctions.
+Participants who are asked to stop any inappropriate behavior are expected to comply immediately. This applies to any Victorious Secret meetings and platforms, either online or in-person. If a participant engages in behavior that violates this code of conduct, other team members may warn the offender and or engage the DSCI 522 Instructor to investigate the Code of Conduct violation and impose appropriate sanctions.
 
 ### Incident Reporting Guidelines
 
 #### Contact points
-If someone violates the Code of Conduct during a Victorious Secret event we ask that you report it to another team member. The person you have talked to should make a report to the DSCI 532 Instructor. If this is not possible for some reason, we would be very grateful if you could report the incident yourself.
+If someone violates the Code of Conduct during a Victorious Secret event we ask that you report it to another team member. The person you have talked to should make a report to the DSCI 522 Instructor. If this is not possible for some reason, we would be very grateful if you could report the incident yourself.
 
 ## Attribution 
 - Derived from the [UBC Data Science 100 CoC](https://github.com/UBC-DSCI/dsci-100/blob/master/CODE_OF_CONDUCT.md)
