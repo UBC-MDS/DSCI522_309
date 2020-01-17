@@ -1,0 +1,127 @@
+---
+title: "Exploratory Data Analysis"
+author: "Shivam Verma"
+date: "16/01/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(data.table, quietly = TRUE)
+library(tidyverse, quietly = TRUE)
+library(plotly, quietly = TRUE)
+library(cowplot, quietly = TRUE)
+
+```
+
+## Description of the variables, [source](https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset)
+- "Administrative", "Administrative Duration", "Informational", "Informational Duration", "Product Related" and "Product Related Duration" represent the number of different types of pages visited by the visitor in that session and total time spent in each of these page categories. The values of these features are derived from the URL information of the pages visited by the user and updated in real time when a user takes an action, e.g. moving from one page to another. 
+
+- The "Bounce Rate", "Exit Rate" and "Page Value" features represent the metrics measured by "Google Analytics" for each page in the e-commerce site. 
+
+- The value of "Bounce Rate" feature for a web page refers to the percentage of visitors who enter the site from that page and then leave ("bounce") without triggering any other requests to the analytics server during that session. 
+
+- The value of "Exit Rate" feature for a specific web page is calculated as for all pageviews to the page, the percentage that were the last in the session. 
+
+- The "Page Value" feature represents the average value for a web page that a user visited before completing an e-commerce transaction. 
+
+- The "Special Day" feature indicates the closeness of the site visiting time to a specific special day (e.g. Mother’s Day, Valentine's Day) in which the sessions are more likely to be finalized with transaction. The value of this attribute is determined by considering the dynamics of e-commerce such as the duration between the order date and delivery date. For example, for Valentina’s day, this value takes a nonzero value between February 2 and February 12, zero before and after this date unless it is close to another special day, and its maximum value of 1 on February 8. 
+
+- The dataset also includes operating system, browser, region, traffic type, visitor type as returning or new visitor, a Boolean value indicating whether the date of the visit is weekend, and month of the year.
+
+
+```{r loading the data}
+
+# need to source this from the script that fetches data
+mydata <- fread("C:/Users/Shivam/Downloads/online_shoppers_intention.csv")
+
+num_vars_1 <- c("Administrative", "Informational", "ProductRelated")
+num_vars_2 <- c("Administrative_Duration", "Informational_Duration", "ProductRelated_Duration", "BounceRates", "ExitRates", "PageValues", "ProductRelated")
+target <- "Revenue"
+cat_vars <- setdiff(names(mydata), c(num_vars_1, num_vars_2, target))
+
+ggplotly(ggplot(mydata, aes(Administrative)) + geom_histogram(binwidth = 1))
+ggplotly(ggplot(mydata, aes(Informational)) + geom_histogram(binwidth = 1))
+ggplotly(ggplot(mydata, aes(ProductRelated)) + geom_histogram(binwidth = 1))
+
+```
+
+## Summary of Numeric Variables
+```{r numerical_variable_exploration}
+quantile_dist <- sapply(num_vars_2, FUN=function(x) {
+  print(paste("Mean of", x, "is", round(mydata[, mean(get(x))], digits=3), "and standard deviation is", round(mydata[, sd(get(x))], digits=3)))
+  mydata[, round(quantile(get(x), probs=seq(0,1,0.05)), digits=3)]
+})
+print(quantile_dist)
+
+```
+
+## Percentage of rows for categories of categorical variables
+```{r categorical_variable_exploration}
+# Percentage of rows for categories of categorical variables
+sapply(c(cat_vars, target), FUN=function(x) {
+  round(mydata[, table(get(x))]/nrow(mydata), digits=3)*100
+})
+
+```
+
+
+
+## Target vs Other Variables
+```{r Target vs Other Variables}
+
+
+chart1 <- ggplot(mydata, aes(Revenue, Administrative_Duration, fill=Revenue)) + geom_boxplot()
+chart2 <- ggplot(mydata, aes(Revenue, Informational_Duration, fill=Revenue)) + geom_boxplot()
+chart3 <- ggplot(mydata, aes(Revenue, ProductRelated_Duration, fill=Revenue)) + geom_boxplot()
+chart4 <- ggplot(mydata, aes(Revenue, BounceRates, fill=Revenue)) + geom_boxplot()
+chart5 <- ggplot(mydata, aes(Revenue, ExitRates, fill=Revenue)) + geom_boxplot()
+chart6 <- ggplot(mydata, aes(Revenue, PageValues, fill=Revenue)) + geom_boxplot()
+chart7 <- ggplot(mydata, aes(Revenue, ProductRelated, fill=Revenue)) + geom_boxplot()
+
+plot_grid(chart1, chart2, chart3, chart4, chart5, chart6, chart7, nrow=4)
+
+
+chart_a <- ggplot(mydata, aes(SpecialDay, fill=Revenue)) + geom_bar(stat = "count", position = "dodge")
+chart_b <- ggplot(mydata, aes(Month, fill=Revenue)) + geom_bar(stat = "count", position = "dodge")
+chart_c <- ggplot(mydata, aes(OperatingSystems, fill=Revenue)) + geom_bar(stat = "count", position = "dodge")
+chart_d <- ggplot(mydata, aes(Browser, fill=Revenue)) + geom_bar(stat = "count", position = "dodge")
+chart_e <- ggplot(mydata, aes(Region, fill=Revenue)) + geom_bar(stat = "count", position = "dodge")
+chart_f <- ggplot(mydata, aes(TrafficType, fill=Revenue)) + geom_bar(stat = "count", position = "dodge")
+chart_g <- ggplot(mydata, aes(VisitorType, fill=Revenue)) + geom_bar(stat = "count", position = "dodge")
+chart_h <- ggplot(mydata, aes(Weekend, fill=Revenue)) + geom_bar(stat = "count", position = "dodge")
+
+options(repr.plot.width = 20, repr.plot.height = 8)
+plot_grid(chart_a, chart_b, chart_c, chart_d, chart_e, chart_f, chart_g, chart_h, nrow=4)
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r temp}
+#temp <- sapply(num_vars_1, FUN=function(x) {
+#  ggplotly(ggplot(mydata, aes(get(x))) + geom_histogram(binwidth = 1))
+#})
+#temp
+
+#test_fun <- function() {
+#  ggplotly(ggplot(mydata, aes(get(x))) + geom_histogram(binwidth = 1))
+#}
+
+#for (x in num_vars_1){
+#  test_fun()
+#}
+
+```
