@@ -1,7 +1,5 @@
 Exploratory Data Analysis
 ================
-Shivam Verma
-16/01/2020
 
 ## Summary
 
@@ -11,67 +9,35 @@ Shivam Verma
   - \~15% sessions resulted in a
 purchase.
 
-## Description of the variables, [source](https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset)
+## Description of the variables, [data source](https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset)
 
-| S No. | Variable                  | Description                                                                                                                         | Insight   |
-| ----- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- | --------- |
-| 1     | `Administrative`          | Number of Distinct administrative pages                                                                                             | blah blah |
-| 2     | `Informational`           | Number of Distinct Informational pages                                                                                              | blah blah |
-| 3     | `ProductRelated`          | Number of Distinct Product Related pages                                                                                            | blah blah |
-| 4     | `Administrative_Duration` | Time(in seconds) spent on Administrative pages                                                                                      | blah blah |
-| 5     | `Informational_Duration`  | Time(in seconds) spent on Informational pages                                                                                       | blah blah |
-| 6     | `ProductRelated_Duration` | Time(in seconds) spent on Product Related pages                                                                                     | blah blah |
-| 7     | `BounceRates`             | Bounce rate of a web page: Percentage of people who visit the website from that webpage and leave without raising any other request | blah blah |
-| 8     | `ExitRates`               | Exit rate of a web page: Percentage of people exited the website from that webpage                                                  | blah blah |
-| 8     | `PageValues`              | Exit rate of a web page: Percentage of people exited the website from that webpage                                                  | blah blah |
-
-  - “Administrative”, “Administrative Duration”, “Informational”,
-    “Informational Duration”, “Product Related” and “Product Related
-    Duration” represent the number of different types of pages visited
-    by the visitor in that session and total time spent in each of these
-    page categories. The values of these features are derived from the
-    URL information of the pages visited by the user and updated in real
-    time when a user takes an action, e.g. moving from one page to
-    another.
-
-  - The “Bounce Rate”, “Exit Rate” and “Page Value” features represent
-    the metrics measured by “Google Analytics” for each page in the
-    e-commerce site.
-
-  - The value of “Bounce Rate” feature for a web page refers to the
-    percentage of visitors who enter the site from that page and then
-    leave (“bounce”) without triggering any other requests to the
-    analytics server during that session.
-
-  - The value of “Exit Rate” feature for a specific web page is
-    calculated as for all pageviews to the page, the percentage that
-    were the last in the session.
-
-  - The “Page Value” feature represents the average value for a web page
-    that a user visited before completing an e-commerce transaction.
-
-  - The “Special Day” feature indicates the closeness of the site
-    visiting time to a specific special day (e.g. Mother’s Day,
-    Valentine’s Day) in which the sessions are more likely to be
-    finalized with transaction. The value of this attribute is
-    determined by considering the dynamics of e-commerce such as the
-    duration between the order date and delivery date. For example, for
-    Valentina’s day, this value takes a nonzero value between February 2
-    and February 12, zero before and after this date unless it is close
-    to another special day, and its maximum value of 1 on February 8.
-
-  - The dataset also includes operating system, browser, region, traffic
-    type, visitor type as returning or new visitor, a Boolean value
-    indicating whether the date of the visit is weekend, and month of
-    the year.
-
-<!-- end list -->
+| S No. | Variable                  | Description                                                                                                                                                                          |
+| ----- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1     | `Administrative`          | Number of Distinct administrative pages                                                                                                                                              |
+| 2     | `Informational`           | Number of Distinct Informational pages                                                                                                                                               |
+| 3     | `ProductRelated`          | Number of Distinct Product Related pages                                                                                                                                             |
+| 4     | `Administrative_Duration` | Time(in seconds) spent on Administrative pages                                                                                                                                       |
+| 5     | `Informational_Duration`  | Time(in seconds) spent on Informational pages                                                                                                                                        |
+| 6     | `ProductRelated_Duration` | Time(in seconds) spent on Product Related pages                                                                                                                                      |
+| 7     | `BounceRates`             | Average bounce rate of all web-pages visited by user. For a web-page its the percentage of people who visit the website from that webpage and left without raising any other request |
+| 8     | `ExitRates`               | Average exit rate of all web-pages visited by user: For a web-page its the percentage of people who exited the website from that webpage                                             |
+| 9     | `PageValues`              | Average page value of all web-pages visited by user: For a web-page its the average dollar-value of that page which the user visited before completing the transaction               |
+| 10    | `SpecialDay`              | The closeness of site visitng time to a special day (higher chances of a session resulting in a transaction)                                                                         |
+| 11    | `OperatingSystems`        | Operating system used by the user                                                                                                                                                    |
+| 12    | `Month`                   | Month of Year                                                                                                                                                                        |
+| 13    | `Browser`                 | Browser used by the user                                                                                                                                                             |
+| 14    | `Region`                  | Geographic region                                                                                                                                                                    |
+| 15    | `TrafficType`             | Type of Channel user by the user to arrive at the website                                                                                                                            |
+| 16    | `VisitorType`             | Type of the visitor                                                                                                                                                                  |
+| 17    | `Weekend`                 | Weekend indicator                                                                                                                                                                    |
+| 18    | `Revenue`                 | Revenue transaction indicator                                                                                                                                                        |
 
 ``` r
 X_train <- suppressMessages(read_csv("../data/X_train.csv"))
 y_train <- suppressMessages(read_csv("../data/y_train.csv"))
 
 mydata <- cbind(X_train, y_train)
+setDT(mydata)
 
 num_vars_1 <- c("Administrative", "Informational", "ProductRelated")
 num_vars_2 <- c("Administrative_Duration", "Informational_Duration", "ProductRelated_Duration", 
@@ -80,6 +46,14 @@ num_vars_2 <- c("Administrative_Duration", "Informational_Duration", "ProductRel
 target <- "Revenue"
 cat_vars <- setdiff(names(mydata), c(num_vars_1, num_vars_2, target))
 
+x <- sapply(mydata, function(x) sum(is.na(x)))
+col_na <- names(x[x>0])
+print(paste("Variables with NA values:", col_na))
+```
+
+    ## [1] "Variables with NA values: "
+
+``` r
 ggplot(mydata, aes(Administrative)) + geom_histogram(binwidth = 1)
 ```
 
@@ -100,8 +74,6 @@ ggplot(mydata, aes(ProductRelated)) + geom_histogram(binwidth = 1)
 ## Summary of Numeric Variables
 
 ``` r
-setDT(mydata)
-
 quantile_dist <- sapply(num_vars_2, FUN=function(x) {
   print(paste("Mean of", x, "is", round(mydata[, mean(get(x))], digits=3), 
               "and standard deviation is", round(mydata[, sd(get(x))], digits=3)))
@@ -275,18 +247,3 @@ plot_grid(chart_a, chart_b, chart_c, chart_d, chart_e, chart_f, chart_g, chart_h
 ```
 
 ![](EDA_files/figure-gfm/Target%20vs%20Other%20Variables-2.png)<!-- -->
-
-``` r
-#temp <- sapply(num_vars_1, FUN=function(x) {
-#  ggplotly(ggplot(mydata, aes(get(x))) + geom_histogram(binwidth = 1))
-#})
-#temp
-
-#test_fun <- function() {
-#  ggplotly(ggplot(mydata, aes(get(x))) + geom_histogram(binwidth = 1))
-#}
-
-#for (x in num_vars_1){
-#  test_fun()
-#}
-```
