@@ -5,6 +5,7 @@ date: "16/01/2020"
 output: 
   github_document:
     pandoc_args: --webtex
+always_allow_html: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -16,7 +17,30 @@ library(cowplot, quietly = TRUE)
 
 ```
 
+
+## Summary
+- Each row represent a session by a user.  
+- Each user has only 1 session in the dataset.  
+- The data is for 1-year period.  
+- ~15% sessions resulted in a purchase.  
+
 ## Description of the variables, [source](https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset)
+
+| S No. | Variable | Description | Insight |
+| ----------- | ----------- | ----------- | ----------- |
+| 1 | `Administrative` | Number of Distinct administrative pages | blah blah |
+| 2 | `Informational` | Number of Distinct Informational pages | blah blah |
+| 3 | `ProductRelated` | Number of Distinct Product Related pages | blah blah |
+| 4 | `Administrative_Duration` | Time(in seconds) spent on Administrative pages | blah blah |
+| 5 | `Informational_Duration` | Time(in seconds) spent on Informational pages | blah blah |
+| 6 | `ProductRelated_Duration` | Time(in seconds) spent on Product Related pages | blah blah |
+| 7 | `BounceRates` | Bounce rate of a web page: Percentage of people who visit the website from that webpage and leave without raising any other request | blah blah |
+| 8 | `ExitRates` | Exit rate of a web page: Percentage of people exited the website from that webpage | blah blah |
+| 8 | `PageValues` | Exit rate of a web page: Percentage of people exited the website from that webpage | blah blah |
+
+
+
+
 - "Administrative", "Administrative Duration", "Informational", "Informational Duration", "Product Related" and "Product Related Duration" represent the number of different types of pages visited by the visitor in that session and total time spent in each of these page categories. The values of these features are derived from the URL information of the pages visited by the user and updated in real time when a user takes an action, e.g. moving from one page to another. 
 
 - The "Bounce Rate", "Exit Rate" and "Page Value" features represent the metrics measured by "Google Analytics" for each page in the e-commerce site. 
@@ -34,26 +58,31 @@ library(cowplot, quietly = TRUE)
 
 ```{r loading the data}
 
-X_train <- read_csv("../data/X_train.csv")
-y_train <- read_csv("../data/y_train.csv")
+X_train <- suppressMessages(read_csv("../data/X_train.csv"))
+y_train <- suppressMessages(read_csv("../data/y_train.csv"))
 
 mydata <- cbind(X_train, y_train)
 
 num_vars_1 <- c("Administrative", "Informational", "ProductRelated")
-num_vars_2 <- c("Administrative_Duration", "Informational_Duration", "ProductRelated_Duration", "BounceRates", "ExitRates", "PageValues", "ProductRelated")
+num_vars_2 <- c("Administrative_Duration", "Informational_Duration", "ProductRelated_Duration", 
+                "BounceRates", "ExitRates", 
+                "PageValues", "ProductRelated")
 target <- "Revenue"
 cat_vars <- setdiff(names(mydata), c(num_vars_1, num_vars_2, target))
 
-ggplotly(ggplot(mydata, aes(Administrative)) + geom_histogram(binwidth = 1))
-ggplotly(ggplot(mydata, aes(Informational)) + geom_histogram(binwidth = 1))
-ggplotly(ggplot(mydata, aes(ProductRelated)) + geom_histogram(binwidth = 1))
+ggplot(mydata, aes(Administrative)) + geom_histogram(binwidth = 1)
+ggplot(mydata, aes(Informational)) + geom_histogram(binwidth = 1)
+ggplot(mydata, aes(ProductRelated)) + geom_histogram(binwidth = 1)
 
 ```
 
 ## Summary of Numeric Variables
 ```{r numerical_variable_exploration}
+setDT(mydata)
+
 quantile_dist <- sapply(num_vars_2, FUN=function(x) {
-  print(paste("Mean of", x, "is", round(mydata[, mean(get(x))], digits=3), "and standard deviation is", round(mydata[, sd(get(x))], digits=3)))
+  print(paste("Mean of", x, "is", round(mydata[, mean(get(x))], digits=3), 
+              "and standard deviation is", round(mydata[, sd(get(x))], digits=3)))
   mydata[, round(quantile(get(x), probs=seq(0,1,0.05)), digits=3)]
 })
 print(quantile_dist)
