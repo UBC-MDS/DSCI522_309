@@ -2,7 +2,9 @@
 title: "Exploratory Data Analysis"
 author: "Shivam Verma"
 date: "16/01/2020"
-output: html_document
+output: 
+  github_document:
+    pandoc_args: --webtex
 ---
 
 ```{r setup, include=FALSE}
@@ -32,8 +34,10 @@ library(cowplot, quietly = TRUE)
 
 ```{r loading the data}
 
-# need to source this from the script that fetches data
-mydata <- fread("C:/Users/Shivam/Downloads/online_shoppers_intention.csv")
+X_train <- read_csv("../data/X_train.csv")
+y_train <- read_csv("../data/y_train.csv")
+
+mydata <- cbind(X_train, y_train)
 
 num_vars_1 <- c("Administrative", "Informational", "ProductRelated")
 num_vars_2 <- c("Administrative_Duration", "Informational_Duration", "ProductRelated_Duration", "BounceRates", "ExitRates", "PageValues", "ProductRelated")
