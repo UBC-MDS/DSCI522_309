@@ -4,7 +4,7 @@ Workflows Analysis Project for DSCI 522
 # Project Proposal
 
 ## Data Source
-The data for this project was obtained from the [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset) and consists of webpage metrics from an online shopping website. 
+The data for this project was obtained from the [University of California Irvine Machine learning Repository](https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset) \[1\] and consists of webpage metrics from an online shopping website. 
 
 ## Research Question 
 The central question of this project will be predictive. Based on webpage visit information(duration, No. of distinct visits, etc.), bounce rate, exit rate, user information, proximity to a holiday and other variables can we accuratley identify which shopping sessions will end in a sale?
@@ -34,3 +34,6 @@ We plan to provide tables of the following as the outputs of our analysis:
 
 In additiona we plan to show the following figure:
 - Confusion Matrix plot
+
+## References 
+\[1\] Dua, Dheeru, and Casey Graff. 2019. “UCI Machine Learning Repository.” University of California, Irvine, School of Information; Computer Sciences. http://archive.ics.uci.edu/ml.
