@@ -6,13 +6,13 @@ output:
 always_allow_html: yes
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include = FALSE, warning = FALSE, message = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(data.table, quietly = TRUE)
 library(tidyverse, quietly = TRUE)
 library(plotly, quietly = TRUE)
 library(cowplot, quietly = TRUE)
-
+library(scales, quietly = TRUE)
 ```
 
 
@@ -48,7 +48,7 @@ library(cowplot, quietly = TRUE)
 
 
 
-```{r loading the data}
+```{r loading the data, echo = FALSE}
 
 X_train <- suppressMessages(read_csv("../data/X_train.csv"))
 y_train <- suppressMessages(read_csv("../data/y_train.csv"))
@@ -65,17 +65,41 @@ cat_vars <- setdiff(names(mydata), c(num_vars_1, num_vars_2, target))
 
 x <- sapply(mydata, function(x) sum(is.na(x)))
 col_na <- names(x[x>0])
-print(paste("Variables with NA values:", col_na))
 
-ggplot(mydata, aes(Administrative)) + geom_histogram(binwidth = 1)
-ggplot(mydata, aes(Informational)) + geom_histogram(binwidth = 1)
-ggplot(mydata, aes(ProductRelated)) + geom_histogram(binwidth = 1)
+if (is_empty(col_na)){
+  print("There is no missing value in this data set.")
+} else{
+  print(paste("Variables with NA values:", col_na))
+}
 
+plot_1 <- ggplot(mydata, aes(Administrative)) + 
+  geom_histogram(binwidth = 1, color = 'white') +
+  labs(
+    title = "Histograms"
+  ) + 
+  theme_bw()
+plot_2 <- ggplot(mydata, aes(Informational)) + 
+  geom_histogram(binwidth = 1, color = 'white') +
+  labs(
+    title = " "
+  ) + theme_bw()
+plot_3 <- mydata %>% 
+  ggplot(aes(x = ProductRelated, y = stat(count) / sum(count), color=Revenue)) + 
+  geom_freqpoly(binwidth = 1) + 
+  scale_y_continuous(labels = scales::percent) +
+  labs(
+    title = "Frequency polygons of ProductRelated"
+  ) + theme_bw()
+options(repr.plot.width = 30, repr.plot.height = 6)
+plot_grid(plot_1, plot_2, nrow=1)
+plot_3
 ```
 
-## Summary of Numeric Variables
-```{r numerical_variable_exploration}
+> There are over 700 classes in the ProductRelated feature, it is possible to treat this feature as categorical or numerical feature. This needs to be decided during the model and feature selection step of this project.
 
+
+## Summary of Numeric Variables
+```{r numerical_variable_exploration, echo = FALSE}
 quantile_dist <- sapply(num_vars_2, FUN=function(x) {
   print(paste("Mean of", x, "is", round(mydata[, mean(get(x))], digits=3), 
               "and standard deviation is", round(mydata[, sd(get(x))], digits=3)))
@@ -86,8 +110,9 @@ print(quantile_dist)
 ```
 
 ## Percentage of rows for categories of categorical variables
-```{r categorical_variable_exploration}
+```{r categorical_variable_exploration, echo=FALSE}
 # Percentage of rows for categories of categorical variables
+
 sapply(c(cat_vars, target), FUN=function(x) {
   round(mydata[, table(get(x))]/nrow(mydata), digits=3)*100
 })
@@ -97,31 +122,51 @@ sapply(c(cat_vars, target), FUN=function(x) {
 
 
 ## Target vs Other Variables
-```{r Target vs Other Variables}
+```{r Target vs Other Variables, echo=FALSE}
 
+mydata %>% 
+  select(num_vars_2, Revenue) %>% 
+  gather("num_vars", "values", -Revenue) %>% 
+  ggplot(aes(y=values, x=Revenue)) +
+  geom_violin(mapping = aes(fill = Revenue),  show.legend = FALSE) +
+  facet_wrap(~num_vars, scales = "free", nrow = 3) +
+  labs(
+    title = "Distributions of the numerical variables"
+  ) + 
+  theme_bw()
 
-chart1 <- ggplot(mydata, aes(Revenue, Administrative_Duration, fill=Revenue)) + geom_boxplot()
-chart2 <- ggplot(mydata, aes(Revenue, Informational_Duration, fill=Revenue)) + geom_boxplot()
-chart3 <- ggplot(mydata, aes(Revenue, ProductRelated_Duration, fill=Revenue)) + geom_boxplot()
-chart4 <- ggplot(mydata, aes(Revenue, BounceRates, fill=Revenue)) + geom_boxplot()
-chart5 <- ggplot(mydata, aes(Revenue, ExitRates, fill=Revenue)) + geom_boxplot()
-chart6 <- ggplot(mydata, aes(Revenue, PageValues, fill=Revenue)) + geom_boxplot()
-chart7 <- ggplot(mydata, aes(Revenue, ProductRelated, fill=Revenue)) + geom_boxplot()
+# chart1 <- ggplot(mydata, aes(Revenue, Administrative_Duration, fill=Revenue)) + geom_boxplot()
+# chart2 <- ggplot(mydata, aes(Revenue, Informational_Duration, fill=Revenue)) + geom_boxplot()
+# chart3 <- ggplot(mydata, aes(Revenue, ProductRelated_Duration, fill=Revenue)) + geom_boxplot()
+# chart4 <- ggplot(mydata, aes(Revenue, BounceRates, fill=Revenue)) + geom_boxplot()
+# chart5 <- ggplot(mydata, aes(Revenue, ExitRates, fill=Revenue)) + geom_boxplot()
+# chart6 <- ggplot(mydata, aes(Revenue, PageValues, fill=Revenue)) + geom_boxplot()
+# chart7 <- ggplot(mydata, aes(Revenue, ProductRelated, fill=Revenue)) + geom_boxplot()
+# 
+# plot_grid(chart1, chart2, chart3, chart4, chart5, chart6, chart7, nrow=4)
 
-plot_grid(chart1, chart2, chart3, chart4, chart5, chart6, chart7, nrow=4)
+mydata %>% 
+  select(cat_vars, Revenue) %>% 
+  gather("num_vars", "values", -Revenue) %>% 
+  ggplot(aes(x=Revenue, fill=Revenue)) +
+  geom_bar(stat = "count", position = "dodge", show.legend = FALSE) +
+  facet_wrap(~num_vars, scales = "free", nrow = 3) +
+  labs(
+    title = "Distributions of the categorical variables"
+  ) + 
+  theme_bw()
 
-
-chart_a <- ggplot(mydata, aes(SpecialDay, fill=Revenue)) + geom_bar(stat = "count", position = "dodge")
-chart_b <- ggplot(mydata, aes(Month, fill=Revenue)) + geom_bar(stat = "count", position = "dodge")
-chart_c <- ggplot(mydata, aes(OperatingSystems, fill=Revenue)) + geom_bar(stat = "count", position = "dodge")
-chart_d <- ggplot(mydata, aes(Browser, fill=Revenue)) + geom_bar(stat = "count", position = "dodge")
-chart_e <- ggplot(mydata, aes(Region, fill=Revenue)) + geom_bar(stat = "count", position = "dodge")
-chart_f <- ggplot(mydata, aes(TrafficType, fill=Revenue)) + geom_bar(stat = "count", position = "dodge")
-chart_g <- ggplot(mydata, aes(VisitorType, fill=Revenue)) + geom_bar(stat = "count", position = "dodge")
-chart_h <- ggplot(mydata, aes(Weekend, fill=Revenue)) + geom_bar(stat = "count", position = "dodge")
-
-options(repr.plot.width = 20, repr.plot.height = 8)
-plot_grid(chart_a, chart_b, chart_c, chart_d, chart_e, chart_f, chart_g, chart_h, nrow=4)
+# chart_a <- ggplot(mydata, aes(SpecialDay, fill=Revenue)) + geom_bar(stat = "count", position = "dodge")
+# chart_b <- ggplot(mydata, aes(Month, fill=Revenue)) + geom_bar(stat = "count", position = "dodge")
+# chart_c <- ggplot(mydata, aes(OperatingSystems, fill=Revenue)) + geom_bar(stat = "count", position = "dodge")
+# chart_d <- ggplot(mydata, aes(Browser, fill=Revenue)) + geom_bar(stat = "count", position = "dodge")
+# chart_e <- ggplot(mydata, aes(Region, fill=Revenue)) + geom_bar(stat = "count", position = "dodge")
+# chart_f <- ggplot(mydata, aes(TrafficType, fill=Revenue)) + geom_bar(stat = "count", position = "dodge")
+# chart_g <- ggplot(mydata, aes(VisitorType, fill=Revenue)) + geom_bar(stat = "count", position = "dodge")
+# chart_h <- ggplot(mydata, aes(Weekend, fill=Revenue)) + geom_bar(stat = "count", position = "dodge")
+# 
+# options(repr.plot.width = 20, repr.plot.height = 8)
+# plot_grid(chart_a, chart_b, chart_c, chart_d, chart_e, chart_f, chart_g, chart_h, nrow=4)
 
 ```
 
