@@ -73,16 +73,11 @@ if (is_empty(col_na)){
 }
 
 plot_1 <- ggplot(mydata, aes(Administrative)) + 
-  geom_histogram(binwidth = 1, color = 'white') +
-  labs(
-    title = "Histograms"
-  ) + 
+  geom_histogram(binwidth = 1, color = 'white') + 
   theme_bw()
 plot_2 <- ggplot(mydata, aes(Informational)) + 
-  geom_histogram(binwidth = 1, color = 'white') +
-  labs(
-    title = " "
-  ) + theme_bw()
+  geom_histogram(binwidth = 1, color = 'white') + 
+  theme_bw()
 plot_3 <- mydata %>% 
   ggplot(aes(x = ProductRelated, y = stat(count) / sum(count), color=Revenue)) + 
   geom_freqpoly(binwidth = 1) + 
@@ -91,7 +86,9 @@ plot_3 <- mydata %>%
     title = "Frequency polygons of ProductRelated"
   ) + theme_bw()
 options(repr.plot.width = 30, repr.plot.height = 6)
-plot_grid(plot_1, plot_2, nrow=1)
+p <- plot_grid(plot_1, plot_2, nrow=1)
+title <- ggdraw() + draw_label("Histograms of Administrative and Informationa", fontface='bold')
+plot_grid(title, p, ncol=1, rel_heights=c(0.1, 1))
 plot_3
 ```
 
@@ -138,13 +135,21 @@ mydata %>%
 mydata %>% 
   select(cat_vars, Revenue) %>% 
   gather("num_vars", "values", -Revenue) %>% 
-  ggplot(aes(x=values, fill=Revenue)) +
-  geom_bar(stat = "count", position = "dodge") +
+  group_by(Revenue, values, num_vars) %>% 
+  summarise(n = n()) %>% 
+  group_by(Revenue, num_vars) %>% 
+  mutate(freq = n / sum(n)) %>% 
+  ggplot(aes(x=values, y=freq, fill=Revenue)) +
+  geom_col(position = "dodge")+
+  scale_y_continuous(labels = scales::percent) +
   facet_wrap(~num_vars, scales  ="free", nrow = 4) +
   labs(
-    title = "Distributions of the categorical variables"
+    title = "Distributions of the categorical variables",
+    x = "Categorical variables",
+    y = "Frequency"
   ) + 
   theme_bw()
+  
 
 ```
 
