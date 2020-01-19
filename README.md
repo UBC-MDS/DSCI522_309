@@ -1,6 +1,8 @@
 # DSCI522_309
 Workflows Analysis Project for DSCI 522
 
+- Authors: Lesley Miller, Cheng Min, Shivam Verma
+
 # Project Proposal
 
 ## Data Source
@@ -21,7 +23,7 @@ Our preprocessing and analysis plan should consist of the following activities:
 - Decide a methodology for outlier treatment & feature selection
 
 
-## Exploratory Data Analysis, [see here](https://github.com/vermashivam679/DSCI522_309/blob/master/src/EDA.md)  
+## Exploratory Data Analysis, [see here](https://github.com/UBC-MDS/DSCI522_309/blob/master/src/EDA.md)  
 We plan to show a grid of bar plots detailing the frequency distributions of the 8 categorical variables. It will be a series of side-by-side barplots, one plot for each variable. For example, with type of web browser the plot would show the number of sessions with a specific brower for sales and no sales. 
 
 One data table we plan to show is the cumulative quantile distribution for the quantitative variables. For example, the table would show the cumulative distribution of users' time duration spent on the webpage.
