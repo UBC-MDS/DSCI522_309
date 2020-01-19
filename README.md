@@ -24,11 +24,11 @@ Our preprocessing and analysis plan should consist of the following activities:
 ## Exploratory Data Analysis
 We plan to show a grid of bar plots detailing the frequency distributions of the 8 categorical variables. It will be a series of side-by-side barplots, one plot for each variable. For example, with type of web browser the plot would show the number of sessions with a specific brower for sales and no sales. 
 
-One data table we plan to show is the cumulative quantile distribution for the quantitative variables. For example the table would show the cumulative distribution of users' duration spent on the webpage.
+One data table we plan to show is the cumulative quantile distribution for the quantitative variables. For example, the table would show the cumulative distribution of users' time duration spent on the webpage.
 
 ## Analysis Outputs 
 We plan to provides tables of the following as the outputs of our analysis: 
 - Confusion Matrix 
 - ROC curve 
 - F1 score 
-- predictor importance 
+- Predictor importance 
