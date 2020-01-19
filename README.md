@@ -27,8 +27,10 @@ We plan to show a grid of bar plots detailing the frequency distributions of the
 One data table we plan to show is the cumulative quantile distribution for the quantitative variables. For example, the table would show the cumulative distribution of users' time duration spent on the webpage.
 
 ## Analysis Outputs 
-We plan to provides tables of the following as the outputs of our analysis: 
-- Confusion Matrix 
+We plan to provide tables of the following as the outputs of our analysis: 
 - ROC curve 
 - F1 score 
 - Predictor importance 
+
+In additiona we plan to show the following figure:
+- Confusion Matrix plot
