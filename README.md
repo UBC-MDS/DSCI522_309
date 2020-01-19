@@ -7,7 +7,7 @@ Workflows Analysis Project for DSCI 522
 The data for this project was obtained from the [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset) and consists of webpage metrics from an online shopping website. 
 
 ## Research Question 
-The central question of this project will be predictive. Based on webpage visit duration, proximity to a holiday and additional variables can we accuratley identify which shopping sessions will end in a sale?
+The central question of this project will be predictive. Based on webpage visit information(duration, No. of distinct visits, etc.), bounce rate, exit rate, user information, proximity to a holiday and other variables can we accuratley identify which shopping sessions will end in a sale?
 
 ## Analysis Plan 
 The main objective will be to build a binary classification model. 
@@ -21,16 +21,16 @@ Our preprocessing and analysis plan should consist of the following activities:
 - Decide a methodology for outlier treatment & feature selection
 
 
-## Exploratory Data Analysis
+## Exploratory Data Analysis, [see here](https://github.com/vermashivam679/DSCI522_309/blob/master/src/EDA.md)  
 We plan to show a grid of bar plots detailing the frequency distributions of the 8 categorical variables. It will be a series of side-by-side barplots, one plot for each variable. For example, with type of web browser the plot would show the number of sessions with a specific brower for sales and no sales. 
 
 One data table we plan to show is the cumulative quantile distribution for the quantitative variables. For example, the table would show the cumulative distribution of users' time duration spent on the webpage.
 
 ## Analysis Outputs 
 We plan to provide tables of the following as the outputs of our analysis: 
-- ROC curve 
-- F1 score 
-- Predictor importance 
+- ROC-AUC curve  
+- F1 score  
+- Predictor importance  
 
 In additiona we plan to show the following figure:
 - Confusion Matrix plot
