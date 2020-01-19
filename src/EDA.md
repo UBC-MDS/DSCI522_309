@@ -32,17 +32,77 @@ purchase.
 | 17    | `Weekend`                 | Weekend indicator                                                                                                                                                                    |
 | 18    | `Revenue`                 | Revenue transaction indicator                                                                                                                                                        |
 
+``` r
+X_train <- suppressMessages(read_csv("../data/X_train.csv"))
+y_train <- suppressMessages(read_csv("../data/y_train.csv"))
+
+mydata <- cbind(X_train, y_train)
+setDT(mydata)
+
+num_vars_1 <- c("Administrative", "Informational", "ProductRelated")
+num_vars_2 <- c("Administrative_Duration", "Informational_Duration", "ProductRelated_Duration", 
+                "BounceRates", "ExitRates", 
+                "PageValues", "ProductRelated")
+target <- "Revenue"
+cat_vars <- setdiff(names(mydata), c(num_vars_1, num_vars_2, target))
+
+x <- sapply(mydata, function(x) sum(is.na(x)))
+col_na <- names(x[x>0])
+
+if (is_empty(col_na)){
+  print("There is no missing value in this data set.")
+} else{
+  print(paste("Variables with NA values:", col_na))
+}
+```
+
     ## [1] "There is no missing value in this data set."
 
-![](EDA_files/figure-gfm/loading%20the%20data-1.png)<!-- -->![](EDA_files/figure-gfm/loading%20the%20data-2.png)<!-- -->
+``` r
+plot_1 <- ggplot(mydata, aes(Administrative)) + 
+  geom_histogram(binwidth = 1, color = 'white') +
+  labs(
+    title = "Histograms"
+  ) + 
+  theme_bw()
+plot_2 <- ggplot(mydata, aes(Informational)) + 
+  geom_histogram(binwidth = 1, color = 'white') +
+  labs(
+    title = " "
+  ) + theme_bw()
+plot_3 <- mydata %>% 
+  ggplot(aes(x = ProductRelated, y = stat(count) / sum(count), color=Revenue)) + 
+  geom_freqpoly(binwidth = 1) + 
+  scale_y_continuous(labels = scales::percent) +
+  labs(
+    title = "Frequency polygons of ProductRelated"
+  ) + theme_bw()
+options(repr.plot.width = 30, repr.plot.height = 6)
+plot_grid(plot_1, plot_2, nrow=1)
+```
+
+![](EDA_files/figure-gfm/loading%20the%20data-1.png)<!-- -->
+
+``` r
+plot_3
+```
+
+![](EDA_files/figure-gfm/loading%20the%20data-2.png)<!-- -->
 
 > There are over 700 classes in the ProductRelated feature, it is
 > possible to treat this feature as categorical or numerical feature.
 > This needs to be decided during the model and feature selection step
-> of this
-    project.
+> of this project.
 
 ## Summary of Numeric Variables
+
+``` r
+quantile_dist <- sapply(num_vars_2, FUN=function(x) {
+  print(paste("Mean of", x, "is", round(mydata[, mean(get(x))], digits=3), 
+              "and standard deviation is", round(mydata[, sd(get(x))], digits=3)))
+  mydata[, round(quantile(get(x), probs=seq(0,1,0.05)), digits=3)]
+})
+```
 
     ## [1] "Mean of Administrative_Duration is 82.436 and standard deviation is 179.302"
     ## [1] "Mean of Informational_Duration is 34.623 and standard deviation is 141.693"
@@ -51,6 +111,10 @@ purchase.
     ## [1] "Mean of ExitRates is 0.043 and standard deviation is 0.049"
     ## [1] "Mean of PageValues is 5.997 and standard deviation is 18.64"
     ## [1] "Mean of ProductRelated is 31.82 and standard deviation is 44.681"
+
+``` r
+print(quantile_dist)
+```
 
     ##      Administrative_Duration Informational_Duration ProductRelated_Duration
     ## 0%                     0.000                  0.000                   0.000
@@ -98,6 +162,14 @@ purchase.
     ## 100%       0.200     0.200    361.764            705
 
 ## Percentage of rows for categories of categorical variables
+
+``` r
+# Percentage of rows for categories of categorical variables
+
+sapply(c(cat_vars, target), FUN=function(x) {
+  round(mydata[, table(get(x))]/nrow(mydata), digits=3)*100
+})
+```
 
     ## $SpecialDay
     ## 
@@ -148,4 +220,32 @@ purchase.
 
 ## Target vs Other Variables
 
-![](EDA_files/figure-gfm/Target%20vs%20Other%20Variables-1.png)<!-- -->![](EDA_files/figure-gfm/Target%20vs%20Other%20Variables-2.png)<!-- -->
+``` r
+mydata %>% 
+  select(num_vars_2, Revenue) %>% 
+  gather("num_vars", "values", -Revenue) %>% 
+  ggplot(aes(y=values, x=Revenue)) +
+  geom_violin(mapping = aes(fill = Revenue),  show.legend = FALSE) +
+  facet_wrap(~num_vars, scales = "free", nrow = 3) +
+  labs(
+    title = "Distributions of the numerical variables"
+  ) + 
+  theme_bw()
+```
+
+![](EDA_files/figure-gfm/Target%20vs%20Other%20Variables-1.png)<!-- -->
+
+``` r
+mydata %>% 
+  select(cat_vars, Revenue) %>% 
+  gather("num_vars", "values", -Revenue) %>% 
+  ggplot(aes(x=values, fill=Revenue)) +
+  geom_bar(stat = "count", position = "dodge") +
+  facet_wrap(~num_vars, scales  ="free", nrow = 4) +
+  labs(
+    title = "Distributions of the categorical variables"
+  ) + 
+  theme_bw()
+```
+
+![](EDA_files/figure-gfm/Target%20vs%20Other%20Variables-2.png)<!-- -->
