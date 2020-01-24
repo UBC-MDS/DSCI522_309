@@ -1,0 +1,57 @@
+---
+title: "Predicting Online Sales from Webpage Analytics"
+author: "Lesley Miller"
+date: "24/01/2020"
+output: 
+      pdf_document:
+            toc: true
+      
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load data}
+
+```
+
+
+# Project Summary
+
+
+```{r}
+```
+
+# Why it Matters
+
+
+# Methods 
+## Data Source
+
+## Exploratory Data Analysis
+
+![](../results/img/cat_vars_dist_plot.png)
+
+![](../results/img/num_vars_dist_plot.png)
+
+![](../results/img/corr_plot.png)
+
+
+
+## Modelling 
+
+
+
+
+# Results and Discussion 
+
+## Limitations 
+
+## Future Directions 
+```{r echo=FALSE}
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+# References 
