@@ -49,11 +49,7 @@ library(scales, quietly = TRUE)
 
 
 ```{r loading the data}
-
-X_train <- suppressMessages(read_csv("../data/X_train.csv"))
-y_train <- suppressMessages(read_csv("../data/y_train.csv"))
-
-mydata <- cbind(X_train, y_train)
+mydata <- suppressMessages(read_csv("data/processed/training_for_eda.csv"))
 setDT(mydata)
 
 num_vars_1 <- c("Administrative", "Informational", "ProductRelated")
