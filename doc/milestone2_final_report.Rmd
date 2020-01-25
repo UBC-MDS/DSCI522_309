@@ -142,6 +142,7 @@ kable(select(quantile_dist, probs, colnames(quantile_dist[5:8])),
 
 # Methods 
 ## Data Source
+
 # turn this into written text not bullent points. 
 - Each row represent a session by a user.  
 - Each user has only 1 session in the dataset.  
