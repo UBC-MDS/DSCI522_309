@@ -52,7 +52,7 @@ def main(input_url, out_dir):
     # Saving Hyper parameter optimization results
     Hyp_opt_result = pd.DataFrame(clf.cv_results_)
     Hyp_opt_result = Hyp_opt_result[["param_class_weight","param_max_depth","param_n_estimators","mean_train_score","std_train_score","mean_test_score","std_test_score"]].iloc[clf.best_index_,]
-    Hyp_opt_result.to_csv(out_dir+'/GridSearchCV.csv', index=False)
+    Hyp_opt_result.to_csv(out_dir+'/GridSearchCV.csv')
     print("The best parameters from GridSearch are: ", clf.best_params_)
     print("The error on Train is: ", 1-clf.score(X_train, y_train), "and test is: ", 1-clf.score(X_test, y_test))
 
