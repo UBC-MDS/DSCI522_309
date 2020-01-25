@@ -7,7 +7,7 @@ Saves the plots as png files and save the tables as .csv files
 Usage: src/eda.r --input_dir=<input_dir> --out_dir=<out_dir>
   
 Options:
---input_dir=<input_dir>    Path to training data
+--input_dir=<input_dir>    Path to training data (filename should not be included)
 --out_dir=<out_dir> Path to directory where the plots and tables should be saved
 " -> doc
 

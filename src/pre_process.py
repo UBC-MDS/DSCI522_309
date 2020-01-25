@@ -4,12 +4,15 @@
 """Cleans, splits and pre-processes (scales) the online shoppers intetion data from UCI website:
    https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset
    Writes the training and test data to separate csv files.
+   The column names of the data should be: "Administrative", "Informational", "ProductRelated",
+   "Administrative_Duration", "Informational_Duration", "ProductRelated_Duration", "BounceRates", 
+   "ExitRates", "PageValues", "ProductRelated" (for numerical variables) and "Revenue" (for labels).
 
    Usage: src/pre_process.py --input=<input> --out_dir=<out_dir>
 
    Options:
     --input=<input>       Path to raw data, filename should be included
-    --out_dir=<out_dir>   Path to directory where the processed data should be written
+    --out_dir=<out_dir>   Local file path to folder in which the processed data csvs will be written
 
 """
 import numpy as np
@@ -35,7 +38,6 @@ def main(input_data, out_dir):
 
     # Save the data
     training.to_csv(out_dir + "/training_for_eda.csv", index=False)
-    test.to_csv(out_dir + "/test_for_eda.csv", index=False)
 
     # Split the data to features and reponses
     X_train = training.drop(columns = "Revenue")

@@ -4,12 +4,12 @@
 """This script fetches the online shoppers intetion data from UCI website.
    The description of the data can be found at 
    https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset
-   and stored the data in the data folder
+   and stored in the data folder specified by argument localpath
 
    Usage: src/fetch_data.py --localpath=<localpath> [--url=<url>]
 
    Options:
-   --localpath=<localpath> Local file path to write the data
+   --localpath=<localpath> Local file path to folder in which data csvs will be written
    --url=<url> The URL path to the csv file [default: "https://archive.ics.uci.edu/ml/machine-learning-databases/00468/online_shoppers_intention.csv"]
 
 """
