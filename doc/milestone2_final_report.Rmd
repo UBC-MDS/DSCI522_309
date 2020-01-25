@@ -50,8 +50,6 @@ X_train <- read_csv("results/Training_pred.csv")
 
 
 
-
-
 ```{r categorical variable summary tables }
 ### make Summary tables of categorical variables 
 # convert tables into tibbles 
@@ -147,13 +145,28 @@ kable(select(quantile_dist, probs, colnames(quantile_dist[5:8])),
 
 ![](../results/img/cat_vars_dist_plot.png)
 
-![](../results/img/num_vars_dist_plot.png)
+```{r distribution of categorical variables, fig.cap="Distribution of Categorical Predictors",out.height='70%', out.width='70%', fig.align="center"}
 
-![](../results/img/corr_plot.png)
+include_graphics("../results/img/cat_vars_dist_plot.png")
+```
+
+
+```{r distribution of numvariables, fig.cap="Distribution of Quantitative Predictors", out.height='70%', out.width='70%', fig.align="center"}
+
+include_graphics("../results/img/num_vars_dist_plot.png")
+
+```
+
+
+```{r correlation matrix, fig.cap="Correlation Matrix", out.height='50%', out.width='50%', fig.align="center"}
+knitr::include_graphics("../results/img/corr_plot.png")
+```
 
 
 
-```{r feature importance}
+
+
+```{r feature importance, fig.cap="Feature Importance"}
 
 feature_importance_df %>% 
       filter(Feature_Imp > 40) %>% 
