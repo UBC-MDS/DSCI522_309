@@ -3,9 +3,8 @@ title: "Predicting Online Sales from Webpage Analytics"
 author: "Lesley Miller"
 date: "24/01/2020"
 output: 
-      pdf_document:
-            toc: true
-      
+  html_document:
+    toc: true
 ---
 
 ```{r setup, include = FALSE, warning = FALSE, message = FALSE, echo=FALSE}
@@ -18,16 +17,39 @@ knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_knit$set(root.dir = here::here())
 ```
 
-```{r load data, message = FALSE}
+```{r load data, message = FALSE, include=FALSE}
 cat_vars_expo <- readRDS("results/cat_vars_expo.rds")
 quantile_dist <- read_csv("results/quantile_dist.csv")
 feature_importance_df <- read_csv("results/Feature_Imp.csv")
 X_train <- read_csv("results/Training_pred.csv")
+hyperpara <- read_csv("results/GridSearchCV.csv")
 ```
 
-## Description of the variables, [data source](https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset)
 
-| S No. | Variable | Description |
+# Project Summary
+
+Here we attempt to build a classification model using the light gradient boosting algorithm which can use webpage metrics from a given online shopping website to predict whether the revenue of a new customer is True (i.e., the customer purchased something) or False (i.e., the customer did not purchase anything). Our final classifier performed well on an unseen test data set, with the f1 score of `r` and the test accuray calculated to be `r`. The precision and recall of our classifier on the test set are `r` and `r` respectively. On the `r` test data cases, it correctly predicted `r`. However it incorrectly predicted `r` cases. (and these cases were FN?: predicting that a customer to purchase something when in fact there is no purchasing happens). Due to the high percentage of incorrect prediction in FN, we recommend further study to improve this model.
+
+# Introduction (Why it Matters)
+
+
+# Methods 
+## Data Source
+
+The data set used in this project is of online shopping webpage metrics created by C. Okan Sakar, S. Olcay Polat, Mete Katircioglu & Yomi Kastro [@]. It was sourced from the UCI Machine Learning Repository [@] and can be found [here](https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset). Each row in the data set represents summary behavior extracted from the URL information , including the final action (purchase or not) and several other measurements (e.g., Number of Distinct Product Related pages, Time spent on Product Related pages, closeness of site visitng time to a special day, etc.). 
+
+## Exploratory Data Analysis
+
+
+> - Each row represent a session by a user.  
+> - Each user has only 1 session in the dataset.  
+> - The data is for 1-year period.  
+> - ~15% sessions resulted in a purchase.
+
+
+### Description of the variables, [data source](https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset)
+
+| No. | Variable | Description |
 | ----------- | ----------- | ----------- |
 | 1 | `Administrative` | Number of Distinct administrative pages |
 | 2 | `Informational` | Number of Distinct Informational pages |
@@ -52,7 +74,7 @@ X_train <- read_csv("results/Training_pred.csv")
 
 
 
-```{r categorical variable summary tables }
+```{r categorical variable summary tables, include=FALSE}
 ### make Summary tables of categorical variables 
 # convert tables into tibbles 
 
@@ -95,56 +117,40 @@ colnames(tb9) <- c("Revenue", "Percentage of Shopping Sessions")
 
 ### plot the categorical tables 
 
-kable(tb1,
-      caption = "Distribution of Special Day")
+kableExtra::kable_styling(kable(tb1,
+      caption = "Distribution of Special Day"), full_width = F)
 
-kable(tb2,
-      caption = "Distribution of Month")
-kable(tb3,
-      caption = "Distribution of Operating Systems")
-kable(tb4,
-      caption = "Distribution of Browser")
-kable(tb5,
-      caption = "Distribution of Region")
-kable(tb6,
-      caption = "Distribution of Traffic Type")
-kable(tb7,
-      caption = "Distribution of Visitor Type")
-kable(tb8,
-      caption = "Distribution of Weekend")
+kableExtra::kable_styling(kable(tb2,
+      caption = "Distribution of Month"), full_width = F)
 
-kable(tb9,
-      caption = "Distribution of Weekend and Revenue")
+kableExtra::kable_styling(kable(tb3,
+      caption = "Distribution of Operating Systems"), full_width = F)
 
-```
+kableExtra::kable_styling(kable(tb4,
+      caption = "Distribution of Browser"), full_width = F)
 
-```{r numeric variable 1-4 summary tables}
-kable(select(quantile_dist, colnames(quantile_dist[1:4])),
-      caption = "Cumulative Distribution of Numberic Variables")
-```
-```{r numeric variable 5-8 summary tables}
-kable(select(quantile_dist, probs, colnames(quantile_dist[5:8])),
-      caption = "Cumulative Distribution of Numberic Variables")
+kableExtra::kable_styling(kable(tb5,
+      caption = "Distribution of Region"), full_width = F)
+
+kableExtra::kable_styling(kable(tb6,
+      caption = "Distribution of Traffic Type"), full_width = F)
+
+kableExtra::kable_styling(kable(tb7,
+      caption = "Distribution of Visitor Type"), full_width = F)
+
+kableExtra::kable_styling(kable(tb8,
+      caption = "Distribution of Weekend"), full_width = F)
+
+kableExtra::kable_styling(kable(tb9,
+      caption = "Distribution of Weekend and Revenue"), full_width = F)
 ```
 
 
+```{r numeric variable summary table}
 
-# Project Summary
-
-
-# Why it Matters
-
-
-# Methods 
-## Data Source
-# turn this into written text not bullent points. 
-- Each row represent a session by a user.  
-- Each user has only 1 session in the dataset.  
-- The data is for 1-year period.  
-- ~15% sessions resulted in a purchase.
-
-## Exploratory Data Analysis
-
+kableExtra::kable_styling(kable(quantile_dist,
+      caption = "Cumulative Distribution of Numberic Variables"))
+```
 ![](../results/img/cat_vars_dist_plot.png)
 
 ![](../results/img/num_vars_dist_plot.png)
@@ -152,6 +158,10 @@ kable(select(quantile_dist, probs, colnames(quantile_dist[5:8])),
 ![](../results/img/corr_plot.png)
 
 
+
+
+
+## Modelling 
 
 ```{r feature importance}
 
@@ -167,16 +177,12 @@ feature_importance_df %>%
       
 ```
 
-## Modelling 
-
-
 # Results and Discussion 
+## Results
 
 ## Limitations 
 
 ## Future Directions 
-```{r echo=FALSE}
-```
 
 
 # References 
