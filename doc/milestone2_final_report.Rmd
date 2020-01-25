@@ -1,6 +1,8 @@
 ---
 title: "Predicting Online Sales from Webpage Analytics"
-author: "Lesley Miller"
+author: 
+- Lesley Miller
+- Cheng Min
 date: "24/01/2020"
 output: 
       pdf_document:
@@ -12,6 +14,7 @@ output:
 library(here)
 library(tidyverse, quietly = TRUE)
 library(knitr)
+library(caret)
 suppressPackageStartupMessages(library(rlang))
 suppressPackageStartupMessages(library(gridExtra))
 knitr::opts_chunk$set(echo = FALSE)
@@ -22,7 +25,11 @@ knitr::opts_knit$set(root.dir = here::here())
 cat_vars_expo <- readRDS("results/cat_vars_expo.rds")
 quantile_dist <- read_csv("results/quantile_dist.csv")
 feature_importance_df <- read_csv("results/Feature_Imp.csv")
-X_train <- read_csv("results/Training_pred.csv")
+best_hyperparams <- read_csv("results/GridSearchCV.csv")
+
+X_train_pred <- read_csv("results/Training_pred.csv")
+X_test_pred <- read_csv("results/Test_pred.csv")
+
 ```
 
 ## Description of the variables, [data source](https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset)
@@ -143,8 +150,6 @@ kable(select(quantile_dist, probs, colnames(quantile_dist[5:8])),
 
 ## Exploratory Data Analysis
 
-![](../results/img/cat_vars_dist_plot.png)
-
 ```{r distribution of categorical variables, fig.cap="Distribution of Categorical Predictors",out.height='70%', out.width='70%', fig.align="center"}
 
 include_graphics("../results/img/cat_vars_dist_plot.png")
@@ -164,10 +169,9 @@ knitr::include_graphics("../results/img/corr_plot.png")
 
 
 
+```{r feature importance, fig.cap="Feature Importance", fig.width=6, fig.height=4, fig.align="center"}
 
-
-```{r feature importance, fig.cap="Feature Importance"}
-
+# plot 10 most important features 
 feature_importance_df %>% 
       filter(Feature_Imp > 40) %>% 
       ggplot(aes(x = reorder(col_names, -Feature_Imp), y = Feature_Imp)) + 
@@ -180,7 +184,51 @@ feature_importance_df %>%
       
 ```
 
+Feature Importance
+
+
 ## Modelling 
+
+```{r confusion matrix, fig.width=4, fig.height=4, fig.align="center"}
+# get the predicted and observed 
+predicted <- as.factor(X_train_pred$skl_predict)
+observed <- as.factor(X_train_pred$Revenue)
+
+# make the confusion matrix object
+confusion_matrix <- confusionMatrix(data = predicted, 
+                                    reference = observed, 
+                                    positive = "TRUE")
+
+# extract the confusion matrix table 
+confusion_matrix_table <- confusion_matrix$table
+
+# convert confusion matrix to tibble 
+confusion_matrix_tibble <- as_tibble(as.data.frame(confusion_matrix_table))
+colnames(confusion_matrix_tibble) <- c("Predicted", "Observed", "Count")
+
+# plot confusion matrix 
+confusion_matrix_tibble %>% 
+      ggplot(aes(x = Observed, y = Predicted)) + 
+      geom_tile(aes(fill = Count, color = "white")) + 
+      geom_text(aes(label = Count)) + 
+      scale_fill_gradient(low = "blue", high = "red") + 
+      theme(legend.position = "None") + 
+      labs(title = "Confusion Matrix") + 
+      theme(plot.title = element_text(hjust = 0.5, size = 14))
+
+
+```
+```{r model eval metrics}
+
+# table of model evaluation scores 
+confusion_matrix_scores <- tibble(Sensitivity = confusion_matrix$byClass[1],
+                                  Specificity = confusion_matrix$byClass[2],
+                                  Precision = confusion_matrix$byClass[5],
+                                  Recall = confusion_matrix$byClass[6],
+                                  F1_Score = confusion_matrix$byClass[7])
+kable(confusion_matrix_scores,
+      caption = "Model Evaluation Metrics")
+```
 
 
 # Results and Discussion 
