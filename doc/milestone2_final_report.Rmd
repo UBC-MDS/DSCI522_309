@@ -173,7 +173,15 @@ kableExtra::kable_styling(kable(quantile_dist,
 
 
 
-## Modelling 
+## Modelling  
+
+We are trying to predict the chances of online purchase by a customer. Since this is a classification problem we tried Machine Learning models that are good for classification and tested their accuracy by optimizing the hyperparameters. We mainly tried `Scikit Learn's` [Logistic Regression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html)(`sklearn.linear_model.LogisticRegression()`), [Random Forest](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html)(`sklearn.ensemble.RandomForest()`) & [Light Gradient Boosting](https://lightgbm.readthedocs.io/en/latest/Python-Intro.html)(`lightgbm.LGBMClassifier()`) Technique. The best accuracy on the validation data was achieved by `LGBM`, therefore we went ahead with automating the entire analysis using `LGBM` only.  
+
+During Exploratory Data Analysis(EDA), we found that the customers who made an online purchase were a small fraction of all the users (~$15$%). Due to this, there was a possibility of facing the class imbalance issue. Because of this, we included the oversampling strategy(`None`: No oversampling, `balanced`:automatically balancing the weights inversely propotional to the class frequencies) provided by `LGBM` in our hyper-parameter optimization and the modeling framework to automatically decide the most optimal oversampling strategy.  
+
+From the initial EDA, we also saw that the variables had a highly skewed distribution with many outliers. Due to this challenge, we preprocessed the data using [Quantile Transformation](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.QuantileTransformer.html) (`sklearn.preprocessing.QuantileTransformation()`) provided by Scikit Learn. This method transforms the individual explanatory variables to follow normal distribution. This transformation is a robust preprocessing technique and reduces the impact of outliers present in the data.  
+
+
 
 ```{r feature importance, fig.align="center"}
 
@@ -202,7 +210,12 @@ kableExtra::kable_styling(kable(hyperpara_df,
 ```
 
 # Results and Discussion 
-## Results
+
+For evaluating the performance of the classification models we are using the following metrices:  
+- **ROC-AUC Curve**: Area Under the ROC curve is an apt measure of the measuring the performance of the model because it doesn't depend on the threshold chosen for classifying the predicted class.  
+- **Confusion Matrix**: Based on the chosen threshold this matrix highlights the classification(True Positives & True Negatives) & misclassification(False Positives & False Negatives) done by the model. The threshold chosen for this matrix is automatically decided by the model based on maximum F1-Score. By looking at the confusion matrix we can know the precision, recall & F1-Score of the predictions which gives a holistic view of the performance of the model.  
+- **Effect of Threshold on Performance**: Deciding the threshold of the predicted probability for classification requires human intervention because sometimes the objective is not only maximizing the accuracy. For e.g. a business might want to decide a threshold that minimizes their cost which is a function of (True/False Positive/Negative). Therefore, we are producing this output which highlights how the performance of the model will change by changing the threshold which can help the stakeholders decide on the optimum threshold.  
+
 
 ```{r roc curve, fig.width = 10, fig.align="center"}
 roc_curve_train <- roc_train %>% 
@@ -317,9 +330,6 @@ perf_curve_test <- performance_test %>%
 plot_grid(perf_curve_train, perf_curve_test, nrow = 2)
 ```
 
-## Limitations 
-
-## Future Directions 
 
 
-# References
+
