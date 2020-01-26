@@ -1,6 +1,9 @@
 ---
 title: "Predicting Online Sales from Webpage Analytics"
-author: "Lesley Miller"
+author: 
+- Lesley Miller
+- Cheng Min
+- Shivam Verma
 date: "24/01/2020"
 output: 
   html_document:
@@ -28,26 +31,22 @@ hyperpara <- read_csv("results/GridSearchCV.csv")
 
 # Project Summary
 
-Here we attempt to build a classification model using the light gradient boosting algorithm which can use webpage metrics from a given online shopping website to predict whether the revenue of a new customer is True (i.e., the customer purchased something) or False (i.e., the customer did not purchase anything). Our final classifier performed well on an unseen test data set, with the f1 score of `r` and the test accuray calculated to be `r`. The precision and recall of our classifier on the test set are `r` and `r` respectively. On the `r` test data cases, it correctly predicted `r`. However it incorrectly predicted `r` cases. (and these cases were FN?: predicting that a customer to purchase something when in fact there is no purchasing happens). Due to the high percentage of incorrect prediction in FN, we recommend further study to improve this model.
+Here we attempt to build a classification model using the light gradient boosting algorithm which can use webpage metrics from a given online shopping website to predict whether the revenue of a new customer is True (i.e., the customer purchased something) or False (i.e., the customer did not purchase anything). Our final classifier performed well on an unseen test data set, with the f1 score of `r` and the test accuray calculated to be `r`. The precision and recall of our classifier on the test set are `r` and `r` respectively. On the `r` test data cases, it correctly predicted `r`. However it incorrectly predicted `r` cases. (and these cases were FN?: predicting that a customer to purchase something when in fact no purchasing occurs). Due to the high percentage of incorrect prediction in FN, we recommend further study to improve this model.
 
-# Introduction (Why it Matters)
+# Introduction 
+Online shopping has quckly become a dominant player in commerce. It's [been reported](https://optinmonster.com/online-shopping-statistics/) that within the next 3 years, 91% of those in the United States will have shopped online! That is nearly 300 million people for the US alone. Additionally, in 2020 the [prediction](https://optinmonster.com/online-shopping-statistics/) is that 4 trillion dollars will be spent by online shoppers. Given this enormous potential, online retailers want to know reliable ways to predict user behavior and uncover insight into what factors are most predictive of sales. The following analysis builds a binary classifier to be able to predict a sale coded as `TRUE` or no sale coded as `FALSE`. 
 
 
 # Methods 
 ## Data Source
 
-The data set used in this project is of online shopping webpage metrics created by C. Okan Sakar, S. Olcay Polat, Mete Katircioglu & Yomi Kastro [@]. It was sourced from the UCI Machine Learning Repository [@] and can be found [here](https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset). Each row in the data set represents summary behavior extracted from the URL information , including the final action (purchase or not) and several other measurements (e.g., Number of Distinct Product Related pages, Time spent on Product Related pages, closeness of site visitng time to a special day, etc.). 
+The data set used in this project is of online shopping webpage metrics created by C. Okan Sakar, S. Olcay Polat, Mete Katircioglu & Yomi Kastro [@]. It was sourced from the UCI Machine Learning Repository [@] and can be found [here](https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset). Each row in the data set represents webpage metrics on a single shopper which was extracted from the URL information and includes the final action (purchase or not) and several other measurements (e.g., Number of Distinct Product Related pages, Time spent on Product Related pages, closeness of site visitng time to a special day, etc.). 
 
 ## Exploratory Data Analysis
+Each row in the dataset represents a session by a single user with a total of 12,330 shopping sessions. Each unique user is represented only once in the entire dataset and is form a 1-year period. A total of 15% of the sessions end in a purchase. The table below describes each of the 18 measurements made on each online shopper. 
 
 
-> - Each row represent a session by a user.  
-> - Each user has only 1 session in the dataset.  
-> - The data is for 1-year period.  
-> - ~15% sessions resulted in a purchase.
-
-
-### Description of the variables, [data source](https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset)
+### Description of the webpage metrics, [data source here](https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset)
 
 | No. | Variable | Description |
 | ----------- | ----------- | ----------- |
@@ -69,9 +68,6 @@ The data set used in this project is of online shopping webpage metrics created 
 | 16 | `VisitorType` | Type of the visitor |
 | 17 | `Weekend` | Weekend indicator |
 | 18 | `Revenue` | Revenue transaction indicator |
-
-
-
 
 
 ```{r categorical variable summary tables, include=FALSE}
@@ -145,19 +141,22 @@ kableExtra::kable_styling(kable(tb9,
       caption = "Distribution of Weekend and Revenue"), full_width = F)
 ```
 
+THe table below displays the cumulative distribution of all 7 continuous variables. 
 
 ```{r numeric variable summary table}
 
 kableExtra::kable_styling(kable(quantile_dist,
       caption = "Cumulative Distribution of Numberic Variables"))
 ```
+
+The multi-panel plot below details the distributions of the 8 categorical variables. It highlights how several variables are quite skewed, since a in a  given category, its values tend to be clustered around only a few values. For example, there is clearly one browser that dominates all the others regardless if there is a sale or not. The months of March, May and November constitute a substantial share of the dataset. Also with different operating systems, 4 are the most frequently used while the other 4 are barely represented. 
 ![](../results/img/cat_vars_dist_plot.png)
 
 ![](../results/img/num_vars_dist_plot.png)
 
+We ran correlation analysis to see how the predictor variables are correlated with each other as well as see how the predictors are related linearly to the outcome, `Revenue`.  The heathmap below visualizes the correlation. The most positively correlated are orange to dark red while the negatively correlated variables are in progressively dark blue. Several variables are either not correlated or only weakly correlated. But others ariables, like the page type `Administrative` is strongly correlated with the the time spent on the `Administrative` page coded as `Administrative_Duration`. This is also true of the other page types, `Informational` and `Product Related`. These too, are highly correlated with the time spent on them which intuitively makes sense. `PageValues` which is the average dollar value of the page, is the most positively correlated with `Revenue`; while `Exit Rates` and `Bounce Rates` have slight negative correlation with `Revenue`. 
+
 ![](../results/img/corr_plot.png)
-
-
 
 
 
