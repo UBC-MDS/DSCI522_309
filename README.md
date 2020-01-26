@@ -30,7 +30,7 @@ time to a special day, etc.).
 ## Report
 
 The final report can be found
-[here](https://ttimbers.github.io/breast_cancer_predictor/doc/breast_cancer_predict_report.html).
+[here](https://ubc-mds.github.io/DSCI522_309/doc/milestone2_final_report.html).
 
 ## Usage
 
@@ -56,13 +56,33 @@ project:
 
 Python 3.7.3 and Python packages:
 
-docopt==0.6.2 pandas==0.24.2 numpy==1.17.2 sklearn==0.22.1
+docopt==0.6.2
+
+pandas==0.24.2
+
+numpy==1.17.2
+
+sklearn==0.22.1
+
 lightgbm==2.3.2
 
 R version 3.6.1 and R packages:
 
-knitr==1.26 tidyverse==1.2.1 caret==6.0.84 kableExtra==1.1.0
-scales==1.1.0 docopt==0.6.1 testthat==2.3.1 data.table==1.12.6
+knitr==1.26
+
+tidyverse==1.2.1
+
+caret==6.0.84
+
+kableExtra==1.1.0
+
+scales==1.1.0
+
+docopt==0.6.1
+
+testthat==2.3.1
+
+data.table==1.12.6
 
 ## License
 
