@@ -2,15 +2,21 @@
 title: "Predicting Online Sales from Webpage Analytics"
 author: "Lesley Miller"
 date: "24/01/2020"
+always_allow_html: true
+bibliography: citations.bib
 output: 
   html_document:
     toc: true
+    pandoc_args: --webtex
+
 ---
 
 ```{r setup, include = FALSE, warning = FALSE, message = FALSE, echo=FALSE}
 library(here)
 library(tidyverse, quietly = TRUE)
 library(knitr)
+library(caret)
+library(cowplot)
 suppressPackageStartupMessages(library(rlang))
 suppressPackageStartupMessages(library(gridExtra))
 knitr::opts_chunk$set(echo = FALSE)
@@ -22,7 +28,13 @@ cat_vars_expo <- readRDS("results/cat_vars_expo.rds")
 quantile_dist <- read_csv("results/quantile_dist.csv")
 feature_importance_df <- read_csv("results/Feature_Imp.csv")
 X_train <- read_csv("results/Training_pred.csv")
-hyperpara <- read_csv("results/GridSearchCV.csv")
+hyperpara <- read_csv("results/GridSearchCV.csv", col_names = F)
+roc_train <- read_csv("results/ROC_train_data.csv")
+roc_test <- read_csv("results/ROC_test_data.csv")
+performance_train <- read_csv("results/metric_by_threshold_train.csv")
+performance_test <- read_csv("results/metric_by_threshold_test.csv")
+X_train_pred <- read_csv("results/Training_pred.csv")
+X_test_pred <- read_csv("results/Test_pred.csv")
 ```
 
 
@@ -163,26 +175,151 @@ kableExtra::kable_styling(kable(quantile_dist,
 
 ## Modelling 
 
-```{r feature importance}
+```{r feature importance, fig.align="center"}
 
 feature_importance_df %>% 
       filter(Feature_Imp > 40) %>% 
-      ggplot(aes(x = reorder(col_names, -Feature_Imp), y = Feature_Imp)) + 
+      ggplot(aes(x = reorder(col_names, Feature_Imp), y = Feature_Imp)) + 
       geom_col() +
       labs(title = "Top 10 Most Important Features for Predicting Sales",
            x = "Features",
            y = "Weight of Importance") + 
-      coord_flip() 
-      
-      
+      coord_flip() +
+      theme_bw()
+```
+
+The best hyperparameters after grid search is shown below:
+
+```{r best hyperpara}
+hyperpara_df <- tribble(
+     ~Hyperparameter, ~Value,
+     "class_weight", hyperpara$X2[1],
+  "max_depth",   hyperpara$X2[2],
+  "n_estimators",   hyperpara$X2[3]
+)
+kableExtra::kable_styling(kable(hyperpara_df,
+      caption = "Best hyperparameters chosen"), full_width = F)
 ```
 
 # Results and Discussion 
 ## Results
+
+```{r roc curve, fig.width = 10, fig.align="center"}
+roc_curve_train <- roc_train %>% 
+   ggplot(aes(x = fpr, y = tpr)) +
+   geom_line(size = 1, color = "blue") +
+   geom_abline(slope = 1, intercept = 0, linetype = 2, size = 1) +
+      labs(title = "ROC Curve on the Train Set",
+           x = "False Positive Rate",
+           y = "True Positive Rate") +
+   annotate("text", x = 0.75, y = 0.3, label = paste("AUC=", round(roc_train$AUC[1],2))) +
+   theme_bw()
+
+roc_curve_test <- roc_test %>% 
+   ggplot(aes(x = fpr, y = tpr)) +
+   geom_line(size = 1, color = "blue") +
+   geom_abline(slope = 1, intercept = 0, linetype = 2, size = 1) +
+      labs(title = "ROC Curve on the Test Set",
+           x = "False Positive Rate",
+           y = "True Positive Rate") +
+   annotate("text", x = 0.75, y = 0.3, label = paste("AUC=", round(roc_test$AUC[1],2))) +
+   theme_bw()
+
+plot_grid(roc_curve_train, roc_curve_test)
+```
+
+```{r confusion matrix, fig.width=8, fig.height=4, fig.align="center"}
+# get the predicted and observed
+predicted <- as.factor(X_train_pred$skl_predict)
+observed <- as.factor(X_train_pred$Revenue)
+# make the confusion matrix object
+confusion_matrix <- confusionMatrix(data = predicted,
+                                    reference = observed,
+                                    positive = "TRUE")
+# extract the confusion matrix table
+confusion_matrix_table <- confusion_matrix$table
+# convert confusion matrix to tibble
+confusion_matrix_tibble <- as_tibble(as.data.frame(confusion_matrix_table))
+colnames(confusion_matrix_tibble) <- c("Predicted", "Observed", "Count")
+# plot confusion matrix
+confusion_train_plot <- confusion_matrix_tibble %>%
+      ggplot(aes(x = Observed, y = Predicted)) +
+      geom_tile(aes(fill = Count, color = "white")) +
+      geom_text(aes(label = Count)) +
+      scale_fill_gradient(low = "blue", high = "red") +
+      theme(legend.position = "None") +
+      labs(title = "Confusion Matrix of the Train") +
+      theme(plot.title = element_text(hjust = 0.5, size = 14))
+
+# Test
+predicted_test <- as.factor(X_test_pred$skl_predict)
+observed_test <- as.factor(X_test_pred$Revenue)
+# make the confusion matrix object
+confusion_matrix_test <- confusionMatrix(data = predicted_test,
+                                    reference = observed_test,
+                                    positive = "TRUE")
+# extract the confusion matrix table
+confusion_matrix_table_test <- confusion_matrix_test$table
+# convert confusion matrix to tibble
+confusion_matrix_tibble_test <- as_tibble(as.data.frame(confusion_matrix_table_test))
+colnames(confusion_matrix_tibble_test) <- c("Predicted", "Observed", "Count")
+# plot confusion matrix
+confusion_test_plot <- confusion_matrix_tibble_test %>%
+      ggplot(aes(x = Observed, y = Predicted)) +
+      geom_tile(aes(fill = Count, color = "white")) +
+      geom_text(aes(label = Count)) +
+      scale_fill_gradient(low = "blue", high = "red") +
+      theme(legend.position = "None") +
+      labs(title = "Confusion Matrix of the Test") +
+      theme(plot.title = element_text(hjust = 0.5, size = 14))
+
+plot_grid(confusion_train_plot, confusion_test_plot)
+
+```
+```{r model eval metrics train}
+# table of model evaluation scores
+confusion_matrix_scores <- tibble(Dataset = c("Train", "Test"),
+                                  Precision = c(round(confusion_matrix$byClass[5],3), round(confusion_matrix_test$byClass[5],3)),
+                                  Recall = c(round(confusion_matrix$byClass[6],3), round(confusion_matrix_test$byClass[6],3)),
+                                  F1_Score = c(round(confusion_matrix$byClass[7],3), round(confusion_matrix_test$byClass[7],3)))
+kableExtra::kable_styling(kable(confusion_matrix_scores,
+      caption = "Model Evaluation Metrics on Train"), full_width = F)
+```
+
+```{r performance, fig.height = 8}
+perf_curve_train <- performance_train %>%
+   select("f1"=f1_score_train, "precision"=precision_score_train, "recall"=recall_score_train, "threshold"=threshold) %>% 
+   gather(key = 'metrics', value = 'score', -threshold) %>% 
+   ggplot(aes(x = threshold, y = score)) +
+   geom_line(aes(color = metrics), size = 1)+
+  labs(
+    title = "Model Performance on Train set",
+    x = "Threshold",
+    y = "Score",
+    color = "Type of score"
+  ) +
+   theme_bw() +
+   scale_color_manual(values=c('#999999','#E69F00','#56B4E9'))
+
+perf_curve_test <- performance_test %>%
+   select("f1"=f1_score_test, "precision"=precision_score_test, "recall"=recall_score_test, "threshold"=threshold) %>% 
+   gather(key = 'metrics', value = 'score', -threshold) %>% 
+   ggplot(aes(x = threshold, y = score)) +
+   geom_line(aes(color = metrics), size = 1)+
+  labs(
+    title = "Model Performance on Test set",
+    x = "Threshold",
+    y = "Score",
+    color = "Type of score"
+  ) +
+   theme_bw() +
+   scale_color_manual(values=c('#999999','#E69F00','#56B4E9'))
+plot_grid(perf_curve_train, perf_curve_test, nrow = 2)
+```
 
 ## Limitations 
 
 ## Future Directions 
 
 
-# References 
+# References
