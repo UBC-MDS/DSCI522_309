@@ -1,6 +1,6 @@
 ---
 title: "Predicting Online Sales from Webpage Analytics"
-author: "Lesley Miller"
+author: "Lesley Miller, Cheng Min, Shivam Verma"
 date: "24/01/2020"
 always_allow_html: true
 output: 
