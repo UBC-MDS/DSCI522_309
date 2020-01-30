@@ -49,7 +49,7 @@ library(scales, quietly = TRUE)
 
 
 ```{r loading the data}
-mydata <- suppressMessages(read_csv("data/processed/training_for_eda.csv"))
+mydata <- suppressMessages(read_csv("../data/processed/training_for_eda.csv"))
 setDT(mydata)
 
 num_vars_1 <- c("Administrative", "Informational", "ProductRelated")
