@@ -4,9 +4,9 @@ author: "Lesley Miller, Cheng Min, Shivam Verma"
 date: "24/01/2020"
 always_allow_html: true
 output: 
-  html_document:
-    toc: true
-    pandoc_args: --webtex
+   html_document:
+      toc: true
+      pandoc_args: --webtex
 bibliography: citations.bib
 ---
 
@@ -39,27 +39,33 @@ X_test_pred <- read_csv("results/Test_pred.csv")
 
 # Project Summary
 
-Here we attempt to build a classification model using the light gradient boosting algorithm which can use webpage metrics from a given online shopping website to predict whether the revenue of a new customer is True (i.e., the customer purchased something) or False (i.e., the customer did not purchase anything). Our final classifier performed well on an unseen test data set, with the f1 score of more than $0.6$ and the test accuray of ~$90$%. The precision and recall of our classifier on the test set are also around $0.6$. However, because of the small target frequency we have a high percentage of incorrect prediction in FN, we plan to further investigate & improve our model.
+> Here we attempt to build a classification model using the light gradient boosting algorithm which can use webpage metrics from a given online shopping website to predict whether the revenue of a new customer is True (i.e., the customer makde a purchase) or False (i.e., the customer did not make a purchase). Our final classifier performed well on an unseen test data set, with the F1 score of `r` and the test accuray calculated to be `r`. The precision and recall of our classifier on the test set are `r` and `r` respectively. On the `r` test data cases, it correctly predicted `r`. However it incorrectly predicted `r` cases. (and these cases were FN?: predicting that a customer to purchase something when in fact no purchasing occurs). Due to the high percentage of incorrect prediction in false negative, we recommend further iteration to improve this model.
+
 
 # Introduction
 
-Online shopping has quckly become a dominant player in commerce. It's [been reported](https://optinmonster.com/online-shopping-statistics/) that within the next 3 years, 91% of those in the United States will have shopped online! That is nearly 300 million people for the US alone. Additionally, in 2020 the [prediction](https://optinmonster.com/online-shopping-statistics/) is that 4 trillion dollars will be spent by online shoppers. Given this enormous potential, online retailers want to know reliable ways to predict user behavior and uncover insight into what factors are most predictive of sales. The following analysis builds a binary classifier to be able to predict a sale coded as `TRUE` or no sale coded as `FALSE`.
+> Online shopping has rapidly become a dominant player in commerce. It's [been reported](https://optinmonster.com/online-shopping-statistics/) that within the next 3 years, 91% of those in the United States will have shopped online! That is nearly 300 million people for the US alone. Additionally, in 2020 it is [predicted](https://optinmonster.com/online-shopping-statistics/) that 4 trillion dollars will be spent by online shoppers. Given this enormous potential, online retailers will want to know reliable ways to predict user behavior and uncover insight into what factors are most predictive of sales. The following analysis builds a binary classifier to predict a sale coded as `TRUE` or no sale coded as `FALSE`. In addition, we report the top 10 most important features associated with making a prediction. 
+
+
+# Methods
 
 ## Data Source
-
-The data set used in this project is of online shopping webpage metrics created by C. Okan Sakar, S. Olcay Polat, Mete Katircioglu & Yomi Kastro[@sakar2019real]. It was sourced from the UCI Machine Learning Repository[@Dua] and can be found [here](https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset).Each row in the data set represents webpage metrics on a single shopper which was extracted from the URL information and includes the final action (purchase or not) and several other measurements (e.g., Number of Distinct Product Related pages, Time spent on Product Related pages, closeness of site visitng time to a special day, etc.).
+> The data set used in this project is of online shopping webpage metrics created by C. Okan Sakar, S. Olcay Polat, Mete Katircioglu & Yomi Kastro[@sakar2019real]. It was sourced from the UCI Machine Learning Repository [@Dua] and can be found [here](https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset). Each row in the data set represents webpage metrics on a single shopper which was extracted from the URL information and includes the final action (purchase or not) and several other measurements (e.g., Number of Distinct Product Related pages, Time spent on Product Related pages, closeness of site visitng time to a special day, etc.).
 
 ## Exploratory Data Analysis
 
-Each row in the dataset represents a session by a single user with a total of 12,330 shopping sessions. Each unique user is represented only once in the entire dataset and is form a 1-year period. A total of 15% of the sessions end in a purchase. The table below describes each of the 18 measurements made on each online shopper.
+### Brief Data Summary 
+[Data Source Here](https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset)
 
-> - Each row represent a session by a user.  
+> - Each row represents a session by a single user.  
 > - Each user has only 1 session in the dataset.  
-> - The data is for 1-year period.  
-> - ~15% sessions resulted in a purchase.
-> - Predictive variables included in this analysis are user's visit information, web analytics features & geographic features.
+> - The data is for a 1-year period.  
+> - ~15% of sessions result in a purchase.
+> - Predictive variables included in this analysis are user's visit information, web analytics features & geographic features. See data description table for more details about each variable used in the model. 
 
-### Description of the variables, [data source](https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset)
+### Description of the Variables 
+[Data Source Here](https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset)
+
 
 | No. | Variable | Description |
 | ----------- | ----------- | ----------- |
@@ -83,34 +89,55 @@ Each row in the dataset represents a session by a single user with a total of 12
 | 18 | `Revenue` | Revenue transaction indicator |
 
 
-
-```{r numeric variable summary table}
+```{r numeric variable summary table, include=FALSE}
 
 kableExtra::kable_styling(kable(quantile_dist,
       caption = "Cumulative Distribution of Numberic Variables"))
 ```
 
-The multi-panel plot below details the distributions of the 8 categorical variables. It highlights how several variables are quite skewed, since a in a  given category, its values tend to be clustered around only a few values. For example, there is clearly one browser that dominates all the others regardless if there is a sale or not. The months of March, May and November constitute a substantial share of the dataset. Also with different operating systems, 4 are the most frequently used while the other 4 are barely represented. 
+### Categorical Variables
+> The dataset consists of 8 categorical variables that can be visualized in the multi-panel plot below. The plot visually describes the distributions of these 8 features in both the `TRUE` or sales case and the `FALSE` or no sales case. It highlights how several variables are quite skewed. For example, there is clearly one browser that dominates all the others regardless if there is a sale or not. The months of March, May and November constitute a substantial share of the dataset. Also with different operating systems, 4 are the most frequently used while the other 4 are under represented. 
 
-![](../results/img/cat_vars_dist_plot.png)
+```{r distribution of categorical variables, fig.cap="Distribution of Categorical Predictors",out.height='70%', out.width='70%', fig.align="center"}
+include_graphics("../results/img/cat_vars_dist_plot.png")
+```
 
-![](../results/img/num_vars_dist_plot.png)
+### Continuous Variables
+> The panels of violin plots below show the distributions of the 7 continuous variables in the dataset. All the variables are highly right skewed, so it is difficult to see the bulk of the distribution since the high outliers are so overpowering in every plot except `ExitRates`. The distributions of these variables between sales and no sales appear to overlap. This may lead to difficulty in distinguishing between the sales and no sales.  
 
-We ran correlation analysis to see how the predictor variables are correlated with each other as well as see how the predictors are related linearly to the outcome, `Revenue`.  The heathmap below visualizes the correlation. The most positively correlated are orange to dark red while the negatively correlated variables are in progressively dark blue. Several variables are either not correlated or only weakly correlated. But others ariables, like the page type `Administrative` is strongly correlated with the the time spent on the `Administrative` page coded as `Administrative_Duration`. This is also true of the other page types, `Informational` and `Product Related`. These too, are highly correlated with the time spent on them which intuitively makes sense. `PageValues` which is the average dollar value of the page, is the most positively correlated with `Revenue`; while `Exit Rates` and `Bounce Rates` have slight negative correlation with `Revenue`. 
 
-![](../results/img/corr_plot.png)
+```{r distribution of numvariables, fig.cap="Distribution of Continuous Predictors", out.height='70%', out.width='70%', fig.align="center"}
+include_graphics("../results/img/num_vars_dist_plot.png")
+```
+
 
 ## Modelling  
 
-We are trying to predict the chances of online purchase by a customer. Since this is a classification problem we tried Machine Learning models that are good for classification and tested their accuracy by optimizing the hyperparameters. We mainly tried Python[@Python]'s Scikit Learn[@scikit-learn]'s [Logistic Regression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html)(`sklearn.linear_model.LogisticRegression()`), [Random Forest](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html)(`sklearn.ensemble.RandomForest()`) & [Light Gradient Boosting](https://lightgbm.readthedocs.io/en/latest/Python-Intro.html)(`lightgbm.LGBMClassifier()`) Technique. The best accuracy on the validation data was achieved by `LGBM`, therefore we went ahead with automating the entire analysis using `LGBM` only.  
+> Here we attempted to build a binary classifer that would predict whether an online shopper made a purchase or not. Since this is a classification problem we tried Machine Learning models that are good for classification and tested their accuracy by optimizing the hyperparameters. We mainly tried Python [@Python]'s Scikit Learn's [@scikit-learn] [Logistic Regression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html)(`sklearn.linear_model.LogisticRegression()`), [Random Forest](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html) (`sklearn.ensemble.RandomForest()`) & [Light Gradient Boosting](https://lightgbm.readthedocs.io/en/latest/Python-Intro.html) (`lightgbm.LGBMClassifier()`). The best accuracy on the validation data was achieved by `LGBM`, therefore we went ahead with automating the entire analysis using `LGBM` only.  
 
-During Exploratory Data Analysis(EDA), we used R[@R] and found that the customers who made an online purchase were a small fraction of all the users (~$15$%). Due to this, there was a possibility of facing the class imbalance issue. Because of this, we included the oversampling strategy(`None`: No oversampling, `balanced`:automatically balancing the weights inversely propotional to the class frequencies) provided by `LGBM` in our hyper-parameter optimization and the modeling framework to automatically decide the most optimal oversampling strategy.  
+> We conducted our Exploratory Data Analysis (EDA), in R [@R] and found that the customers who made an online purchase were a small fraction of all the users, ~$15$%). Due to this, there was a possibility of facing the class imbalance issue. To address the potential class imbalance, we included the oversampling strategy (`None`: No oversampling and `balanced`: automatically) balancing the weights inversely propotional to the class frequencies) provided by `LGBM` in our hyper-parameter optimization and the modeling framework to automatically decide the most optimal oversampling strategy.  
 
-From the initial EDA, we also saw that the variables had a highly skewed distribution with many outliers. Due to this challenge, we preprocessed the data using [Quantile Transformation](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.QuantileTransformer.html) (`sklearn.preprocessing.QuantileTransformation()`) provided by Scikit Learn. This method transforms the individual explanatory variables to follow normal distribution. This transformation is a robust preprocessing technique and reduces the impact of outliers present in the data.  
+> From the initial EDA, we also saw that the variables had a highly skewed distribution with many outliers. Due to this challenge, we preprocessed the data using [Quantile Transformation](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.QuantileTransformer.html) (`sklearn.preprocessing.QuantileTransformation()`) provided by Scikit Learn. This method transforms the individual explanatory variables to follow a normal distribution. This transformation is a robust preprocessing technique and reduces the impact of outliers present in the data.  
 
 
+# Results
+## Hyperparameters and Feature Importance
+>**Hyperparameters**: The table below displays the best hyperparameters for `LGBM` after performing grid search. The optimal model had a max depth of 5 and 100 tree estimators. 
 
-```{r feature importance, fig.align="center"}
+```{r best hyperparam}
+hyperpara_df <- tribble(
+     ~Hyperparameter, ~Value,
+     "class_weight", hyperpara$X2[1],
+  "max_depth",   hyperpara$X2[2],
+  "n_estimators",   hyperpara$X2[3]
+)
+kableExtra::kable_styling(kable(hyperpara_df,
+      caption = "Best Hyperparameters"), full_width = F)
+```
+
+> **Feature Importance**: A question of interest for an online retailer might be which variables are most strongly associated with predicting a sale or not. The plot below displays the top ten most important features for making a prediction. The top predictor is `ExitRate` which intuitively makes some sense. This variable is related to how fast a shopper is leaving the website and so it follows that it would have a strong association with classifying sales. The second most important predictor is `ProductRealted_Duration` which has to do with how long a shopper spent on a product related page. Not suprisingly then, the third most important predictor is the `ProductRelated` variable which measures the number of product related pages the user visited while on the site. 
+
+```{r feature importance, fig.align="center", out.height='70%', out.width='70%'}
 
 feature_importance_df %>% 
       filter(Feature_Imp > 40) %>% 
@@ -123,52 +150,14 @@ feature_importance_df %>%
       theme_bw()
 ```
 
-The best hyperparameters after grid search is shown below:
 
-```{r best hyperpara}
-hyperpara_df <- tribble(
-     ~Hyperparameter, ~Value,
-     "class_weight", hyperpara$X2[1],
-  "max_depth",   hyperpara$X2[2],
-  "n_estimators",   hyperpara$X2[3]
-)
-kableExtra::kable_styling(kable(hyperpara_df,
-      caption = "Best hyperparameters chosen"), full_width = F)
-```
+## Model Performance
+>We used the confusion matrix, precision, recall, F1, and ROC curve, to evaluate the performance of our model. 
 
-# Results and Discussion 
+> **Confusion Matrix**: 
+Based on the chosen threshold this matrix highlights the classification (True Positives & True Negatives) & misclassifications (False Positives & False Negatives) made by the model. The threshold is automatically chosen by the model based on maximizing the F1-Score. By looking at the confusion matrix we can know the precision, recall & F1-Score of the predictions which gives a holistic view of the performance of the model.  
 
-For evaluating the performance of the classification models we are using the following metrices:  
-- **ROC-AUC Curve**: Area Under the ROC curve is an apt measure of the measuring the performance of the model because it doesn't depend on the threshold chosen for classifying the predicted class.  
-- **Confusion Matrix**: Based on the chosen threshold this matrix highlights the classification(True Positives & True Negatives) & misclassification(False Positives & False Negatives) done by the model. The threshold chosen for this matrix is automatically decided by the model based on maximum F1-Score. By looking at the confusion matrix we can know the precision, recall & F1-Score of the predictions which gives a holistic view of the performance of the model.  
-- **Effect of Threshold on Performance**: Deciding the threshold of the predicted probability for classification requires human intervention because sometimes the objective is not only maximizing the accuracy. For e.g. a business might want to decide a threshold that minimizes their cost which is a function of (True/False Positive/Negative). Therefore, we are producing this output which highlights how the performance of the model will change by changing the threshold which can help the stakeholders decide on the optimum threshold.  
-
-
-```{r roc curve, fig.width = 10, fig.align="center"}
-roc_curve_train <- roc_train %>% 
-   ggplot(aes(x = fpr, y = tpr)) +
-   geom_line(size = 1, color = "blue") +
-   geom_abline(slope = 1, intercept = 0, linetype = 2, size = 1) +
-      labs(title = "ROC Curve on the Train Set",
-           x = "False Positive Rate",
-           y = "True Positive Rate") +
-   annotate("text", x = 0.75, y = 0.3, label = paste("AUC=", round(roc_train$AUC[1],2))) +
-   theme_bw()
-
-roc_curve_test <- roc_test %>% 
-   ggplot(aes(x = fpr, y = tpr)) +
-   geom_line(size = 1, color = "blue") +
-   geom_abline(slope = 1, intercept = 0, linetype = 2, size = 1) +
-      labs(title = "ROC Curve on the Test Set",
-           x = "False Positive Rate",
-           y = "True Positive Rate") +
-   annotate("text", x = 0.75, y = 0.3, label = paste("AUC=", round(roc_test$AUC[1],2))) +
-   theme_bw()
-
-plot_grid(roc_curve_train, roc_curve_test)
-```
-
-```{r confusion matrix, fig.width=8, fig.height=4, fig.align="center"}
+```{r confusion matrix, fig.width=8, fig.height=4, fig.align="center", fig.cap="Confusion Matrix"}
 # get the predicted and observed
 predicted <- as.factor(X_train_pred$skl_predict)
 observed <- as.factor(X_train_pred$Revenue)
@@ -216,22 +205,53 @@ confusion_test_plot <- confusion_matrix_tibble_test %>%
 plot_grid(confusion_train_plot, confusion_test_plot)
 
 ```
-```{r model eval metrics train}
+
+> **Precision & Recall**: The model metrics table below details the performance of the model when classifying a sale or no sale on both the training and the testing data. For the training data, the precision of the model is ~ 86% with 1,128 of the 1,213  predicted sales correctly labled. The recall is quite a bit lower with the model able to identify only ~71% of the true sales. For testing data these corresponding scores are even lower. On the test set, out of the 292 predicted sales, only 71% were correctly identified; and out of the 347 true sales the model could only identify ~ 60%.
+
+```{r model eval metrics train, fig.align='left'}
 # table of model evaluation scores
 confusion_matrix_scores <- tibble(Dataset = c("Train", "Test"),
                                   Precision = c(round(confusion_matrix$byClass[5],3), round(confusion_matrix_test$byClass[5],3)),
                                   Recall = c(round(confusion_matrix$byClass[6],3), round(confusion_matrix_test$byClass[6],3)),
                                   F1_Score = c(round(confusion_matrix$byClass[7],3), round(confusion_matrix_test$byClass[7],3)))
 kableExtra::kable_styling(kable(confusion_matrix_scores,
-      caption = "Model Evaluation Metrics on Train"), full_width = F)
+      caption = "Model Evaluation Metrics on Train and Test Data"), full_width = F)
 ```
+
+> **ROC-AUC Curve**: Area Under the ROC curve is an apt measure of model performance because it doesn't depend on the threshold chosen for classifying the predicted class.
+```{r roc curve, fig.width = 10, fig.align="center"}
+roc_curve_train <- roc_train %>% 
+   ggplot(aes(x = fpr, y = tpr)) +
+   geom_line(size = 1, color = "blue") +
+   geom_abline(slope = 1, intercept = 0, linetype = 2, size = 1) +
+      labs(title = "ROC Curve on the Train Set",
+           x = "False Positive Rate",
+           y = "True Positive Rate") +
+   annotate("text", x = 0.75, y = 0.3, label = paste("AUC=", round(roc_train$AUC[1],2))) +
+   theme_bw()
+
+roc_curve_test <- roc_test %>% 
+   ggplot(aes(x = fpr, y = tpr)) +
+   geom_line(size = 1, color = "blue") +
+   geom_abline(slope = 1, intercept = 0, linetype = 2, size = 1) +
+      labs(title = "ROC Curve on the Test Set",
+           x = "False Positive Rate",
+           y = "True Positive Rate") +
+   annotate("text", x = 0.75, y = 0.3, label = paste("AUC=", round(roc_test$AUC[1],2))) +
+   theme_bw()
+
+plot_grid(roc_curve_train, roc_curve_test)
+```
+
+## Choosing an Optimal Threshold
+>**Effect of Threshold on Performance**: Deciding the threshold of the predicted probability for classification requires human intervention because sometimes the objective is not only maximizing the accuracy. For e.g. a business might want to decide a threshold that minimizes their cost which is a function of (True/False Positive/Negative). Therefore, we are producing this output which highlights how the performance of the model will change by changing the threshold which can help the stakeholders decide on the optimum threshold. 
 
 ```{r performance, fig.height = 8}
 perf_curve_train <- performance_train %>%
-   select("f1"=f1_score_train, "precision"=precision_score_train, "recall"=recall_score_train, "threshold"=threshold) %>% 
+   select("f1" = f1_score_train, "precision" = precision_score_train, "recall" = recall_score_train, "threshold" = threshold) %>% 
    gather(key = 'metrics', value = 'score', -threshold) %>% 
    ggplot(aes(x = threshold, y = score)) +
-   geom_line(aes(color = metrics), size = 1)+
+   geom_line(aes(color = metrics), size = 1) +
   labs(
     title = "Model Performance on Train set",
     x = "Threshold",
@@ -239,22 +259,29 @@ perf_curve_train <- performance_train %>%
     color = "Type of score"
   ) +
    theme_bw() +
-   scale_color_manual(values=c('#999999','#E69F00','#56B4E9'))
+   scale_color_manual(values = c('#999999','#E69F00','#56B4E9'))
 
 perf_curve_test <- performance_test %>%
-   select("f1"=f1_score_test, "precision"=precision_score_test, "recall"=recall_score_test, "threshold"=threshold) %>% 
+   select("f1" = f1_score_test, "precision" = precision_score_test, "recall" = recall_score_test, "threshold" = threshold) %>% 
    gather(key = 'metrics', value = 'score', -threshold) %>% 
    ggplot(aes(x = threshold, y = score)) +
-   geom_line(aes(color = metrics), size = 1)+
-  labs(
+   geom_line(aes(color = metrics), size = 1) +
+  labs( 
     title = "Model Performance on Test set",
     x = "Threshold",
     y = "Score",
     color = "Type of score"
   ) +
    theme_bw() +
-   scale_color_manual(values=c('#999999','#E69F00','#56B4E9'))
+   scale_color_manual(values = c('#999999','#E69F00','#56B4E9'))
 plot_grid(perf_curve_train, perf_curve_test, nrow = 2)
 ```
 
+# Limitations
+>This dataset contained only ~15% of the class of interest, namely online sales. Such a low proportion of sales examples in the data may be contributing to the low precision and recall on the test set. There was also no feature selection performed which may have resulted in a great number of irrelevant features being retained in the model. 
+
+# Future Directions
+>Future improvements to the model might include performing `Recursive Feature Elimination` to remove features that are least associated with predicting sales. 
+
 # References
+
