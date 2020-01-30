@@ -6,7 +6,7 @@ Exploratory Data Analysis
   - Each row represent a session by a user.  
   - Each user has only 1 session in the dataset.  
   - The data is for 1-year period.  
-  - \~15% sessions resulted in a
+  - ~15% sessions resulted in a
 purchase.
 
 ## Description of the variables, [data source](https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset)
