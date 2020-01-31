@@ -1,5 +1,5 @@
 # author: Cheng Min
-# date: 2020-01-23
+# date: 2020-01-30
 
 "Creates eda plots and tables for the un-pre-processed and pre-processed training data of the online shoppers intetion data from UCI website (https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset).
 Saves the plots as png files and save the tables as .csv files
@@ -17,6 +17,7 @@ library(plotly, quietly = TRUE)
 library(cowplot, quietly = TRUE)
 library(scales, quietly = TRUE)
 library(pheatmap, quietly = TRUE)
+library(testthat, quietly = TRUE)
 library(docopt)
 
 opt <- docopt(doc)
@@ -72,13 +73,16 @@ main <- function(input_dir, out_dir) {
   ggsave(paste0(out_dir, "/img/num_vars_dist_plot.png"), num_vars_dist_plot)
   
   # Save the distribution plot for categorical variables
+  my_level <- c(seq(0,0.8,0.2),seq(1,20),c("Feb", "Mar", "May", "June", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Returning_Visitor", "New_Visitor", "Other", "FALSE", "TRUE"))
+  
   cat_vars_dist_plot <- mydata %>% 
-    select(cat_vars, Revenue) %>% 
+    select(cat_vars, Revenue) %>%
     gather("num_vars", "values", -Revenue) %>% 
     group_by(Revenue, values, num_vars) %>% 
     summarise(n = n()) %>% 
     group_by(Revenue, num_vars) %>% 
-    mutate(freq = n / sum(n)) %>% 
+    mutate(freq = n / sum(n),
+           values = factor(values, levels = my_level)) %>% 
     ggplot(aes(x=values, y=freq, fill=Revenue)) +
     geom_col(position = "dodge")+
     scale_y_continuous(labels = scales::percent) +
@@ -90,7 +94,7 @@ main <- function(input_dir, out_dir) {
     ) + 
     theme_bw()
   
-  ggsave(paste0(out_dir, "/img/cat_vars_dist_plot.png"), cat_vars_dist_plot)
+  ggsave(paste0(out_dir, "/img/cat_vars_dist_plot.png"), cat_vars_dist_plot, width = 22, height = 15, units = "cm")
   
   # Plot the correlation after pre-process and save the plot
   X_train <- read_csv(paste0(input_dir, "/X_train.csv"))
@@ -107,5 +111,21 @@ main <- function(input_dir, out_dir) {
   
   ggsave(paste0(out_dir, "/img/corr_plot.png"), corr_plot)
 }
+
+test_inputs <- function(input, output){
+  test_that("The path to training data is wrong!", {
+    expect_true(dir.exists(input))
+  })
+  
+  test_that("The path to store the results is wrong!", {
+    expect_true(dir.exists(output))
+  })
+  
+  test_that("The file needed does not exist! You may need to run fetch_data.py and pre_process.py first.", {
+    expect_true(file.exists(paste0(input, "/training_for_eda.csv")))
+  })
+}
+
+test_inputs(opt[["--input_dir"]], opt[["--out_dir"]])
 
 main(opt[["--input_dir"]], opt[["--out_dir"]])

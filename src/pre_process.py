@@ -1,5 +1,5 @@
 # Author Cheng Min
-# Date: 2020-01-23
+# Date: 2020-01-30
 
 """Cleans, splits and pre-processes (scales) the online shoppers intetion data from UCI website:
    https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset
@@ -75,6 +75,11 @@ def main(input_data, out_dir):
     pd.DataFrame(y_train).to_csv(out_dir + "/y_train.csv", index=False)
     X_test.to_csv(out_dir + "/X_test.csv", index=False)
     pd.DataFrame(y_test).to_csv(out_dir + "/y_test.csv", index=False)
+    
+def test_input(input):
+   assert input.endswith(".csv"), "Input should be .csv file, please check your input!"
+
+test_input(opt["--input"])
 
 if __name__ == "__main__":
     main(opt["--input"], opt["--out_dir"])
