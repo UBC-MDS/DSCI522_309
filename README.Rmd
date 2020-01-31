@@ -22,53 +22,35 @@ The final report can be found [here](https://ubc-mds.github.io/DSCI522_309/doc/m
 
 ## Usage
 
-To replicate the analysis, clone this GitHub repository, install the [dependencies](#dependencies) listed below, and run the following commands at the command line/terminal from the root directory of this project:
+To replicate the analysis, clone this GitHub repository, install the [dependencies](#dependencies) listed below, and run the following command at the command line/terminal from the root directory of this project:
 
 ```
-# download data
-python src/fetch_data.py --localpath=data/raw
-# pre-process data 
-python src/pre_process.py --input=data/raw/raw_data.csv --out_dir=data/processed 
-# run eda report
-Rscript -e "rmarkdown::render('src/EDA.Rmd')"
-# create exploratory data analysis figure and write to file 
-Rscript src/eda.r --input_dir=data/processed --out_dir=results
-# train and test model
-python src/Modeling.py --datapath=data/processed --out_dir=results
-# render final report
-Rscript -e "rmarkdown::render('doc/milestone2_final_report.Rmd', output_format = 'html_document')"
+make all
+```
+
+To reset the repo to a clean state, with no intermediate or results files, run the following command at the command line/terminal from the root directory of this project:
+
+```
+make clean
 ```
 
 ## Dependencies
-Python 3.7.3 and Python packages:
-
-docopt==0.6.2
-
-pandas==0.24.2
-
-numpy==1.17.2
-
-sklearn==0.22.1
-
-lightgbm==2.3.2
-
-R version 3.6.1 and R packages:
-
-knitr==1.26
-
-tidyverse==1.2.1
-
-caret==6.0.84
-
-kableExtra==1.1.0
-
-scales==1.1.0
-
-docopt==0.6.1
-
-testthat==2.3.1
-
-data.table==1.12.6
+- Python 3.7.3 and Python packages:
+  - docopt==0.6.2
+  - pandas==0.24.2
+  - numpy==1.17.2
+  - sklearn==0.22.1
+  - lightgbm==2.3.2
+- R version 3.6.1 and R packages:
+  - knitr==1.26
+  - tidyverse==1.2.1
+  - caret==6.0.84
+  - kableExtra==1.1.0
+  - scales==1.1.0
+  - docopt==0.6.1
+  - testthat==2.3.1
+  - data.table==1.12.6
+  - here==0.1
   
 ## License
 The Online Shopping Intention Predictor materials here are licensed under the Creative Commons Attribution 2.5 Canada License (CC BY 2.5 CA). If re-using/re-mixing please provide attribution and link to this webpage.
