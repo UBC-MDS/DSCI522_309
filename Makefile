@@ -14,7 +14,7 @@
 #			since train the model takes a while
 
 # run all analysis and generate the final report
-all: doc/milestone2_final_report.html
+all: doc/final_report.html
 
 # fetch the data
 data/raw/raw_data.csv : src/fetch_data.py
@@ -33,8 +33,8 @@ results/Feature_Imp.csv results/GridSearchCV.csv results/metric_by_threshold_tes
 	python src/Modeling.py --datapath=data/processed --out_dir=results
 
 # render report	
-doc/milestone2_final_report.html : doc/milestone2_final_report.Rmd results/img/cat_vars_dist_plot.png results/img/num_vars_dist_plot.png results/Feature_Imp.csv results/GridSearchCV.csv results/metric_by_threshold_test.csv results/metric_by_threshold_train.csv results/ROC_test_data.csv results/ROC_train_data.csv results/Test_pred.csv results/Training_pred.csv doc/citations.bib
-	Rscript -e "rmarkdown::render('doc/milestone2_final_report.Rmd')"
+doc/final_report.html : doc/final_report.Rmd results/img/cat_vars_dist_plot.png results/img/num_vars_dist_plot.png results/Feature_Imp.csv results/GridSearchCV.csv results/metric_by_threshold_test.csv results/metric_by_threshold_train.csv results/ROC_test_data.csv results/ROC_train_data.csv results/Test_pred.csv results/Training_pred.csv doc/citations.bib
+	Rscript -e "rmarkdown::render('doc/final_report.Rmd')"
 
 # Clean up intermediate and results files
 clean : 

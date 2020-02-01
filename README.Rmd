@@ -7,18 +7,45 @@ bibliography: doc/citations.bib
 - author: Lesley Miller, Cheng Min, Shivam Verma
 
 ## About
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+```{r setup, include = FALSE, warning = FALSE, message = FALSE, echo=FALSE}
+library(here)
+library(tidyverse, quietly = TRUE)
 library(knitr)
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_knit$set(root.dir = here::here())
 ```
 
-Here we attempt to build a classification model using the light gradient boosting algorithm which can use webpage metrics from a given online shopping website to predict whether the revenue of a new customer is True (i.e., the customer purchased something) or False (i.e., the customer did not purchase anything). Our final classifier performed well on an unseen test data set, with the f1 score of more than $0.6$ and the test accuray of ~$90$%. The precision and recall of our classifier on the test set are also around $0.6$.However, because of the small target frequency we have a high percentage of incorrect prediction in FN, we plan to further investigate & improve our model.
+```{r load data, message = FALSE, include=FALSE}
+X_train_pred <- read_csv("results/Training_pred.csv")
+X_test_pred <- read_csv("results/Test_pred.csv")
+
+# train data metrics
+clf_rate_tr <- round(sum(X_train_pred$skl_predict==X_train_pred$Revenue)/nrow(X_train_pred), digits = 3)*100
+miss_clf_rate_tr <- 1 - clf_rate_tr
+
+precision_tr <- nrow(X_train_pred %>% filter(skl_predict==TRUE & Revenue==TRUE))/nrow(X_train_pred %>% filter(skl_predict==TRUE))
+recall_tr <- nrow(X_train_pred %>% filter(skl_predict==TRUE & Revenue==TRUE))/nrow(X_train_pred %>% filter(Revenue==TRUE))
+f1_tr <- round(2*precision_tr*recall_tr/(precision_tr + recall_tr), digits = 3)
+
+precision_tr <- round(precision_tr, digits = 3)
+
+# test data metrics
+clf_rate <- round(sum(X_test_pred$skl_predict==X_test_pred$Revenue)/nrow(X_test_pred), digits = 3)*100
+miss_clf_rate <- 1 - clf_rate
+
+precision <- nrow(X_test_pred %>% filter(skl_predict==TRUE & Revenue==TRUE))/nrow(X_test_pred %>% filter(skl_predict==TRUE))
+recall <- nrow(X_test_pred %>% filter(skl_predict==TRUE & Revenue==TRUE))/nrow(X_test_pred %>% filter(Revenue==TRUE))
+f1 <- round(2*precision*recall/(precision + recall), digits = 3)
+
+```
+
+Here we attempt to build a classification model using the light gradient boosting algorithm which can use webpage metrics from a given online shopping website to predict whether the revenue of a new customer is True (i.e., the customer makde a purchase) or False (i.e., the customer did not make a purchase). Our final classifier performed well on an unseen test data set, with the F1 score of `r f1` and the test accuray calculated to be `r clf_rate`%. The precision and recall of our classifier on the test set are `r round(precision, digits=3)` and `r round(recall, digits=3)` respectively. Due to substantially high number of false positives & negatives, we recommend further iteration to improve this model. 
 
 
 The data set used in this project is of online shopping webpage metrics created by C. Okan Sakar, S. Olcay Polat, Mete Katircioglu & Yomi Kastro[@sakar2019real]. It was sourced from the UCI Machine Learning Repository[@Dua] and can be found [here](https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset). Each row in the data set represents summary behavior extracted from the URL information , including the final action (purchase or not) and several other measurements (e.g., Number of Distinct Product Related pages, Time spent on Product Related pages, closeness of site visitng time to a special day, etc.). 
 
 ## Report
-The final report can be found [here](https://ubc-mds.github.io/DSCI522_309/doc/milestone2_final_report.html).
+The final report can be found [here](https://ubc-mds.github.io/DSCI522_309/doc/final_report.html).
 
 ## Usage
 

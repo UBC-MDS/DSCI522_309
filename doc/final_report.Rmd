@@ -1,7 +1,6 @@
 ---
 title: "Predicting Online Sales from Webpage Analytics"
 author: "Lesley Miller, Cheng Min, Shivam Verma"
-date: "24/01/2020"
 always_allow_html: true
 output: 
    html_document:
@@ -132,11 +131,11 @@ include_graphics("../results/img/num_vars_dist_plot.png")
 
 ## Modelling  
 
-> Here we attempted to build a binary classifer that would predict whether an online shopper made a purchase or not. Since this is a classification problem we tried Machine Learning models that are good for classification and tested their accuracy by optimizing the hyperparameters. We mainly tried Python [@Python]'s Scikit Learn's [@scikit-learn] [Logistic Regression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html)(`sklearn.linear_model.LogisticRegression()`), [Random Forest](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html) (`sklearn.ensemble.RandomForest()`) & [Light Gradient Boosting](https://lightgbm.readthedocs.io/en/latest/Python-Intro.html) (`lightgbm.LGBMClassifier()`). The best accuracy on the validation data was achieved by `LGBM`, therefore we went ahead with automating the entire analysis using `LGBM` only.  
+> Here we attempted to build a binary classifer that would predict whether an online shopper made a purchase or not. Since this is a classification problem we tried Machine Learning models that are good for classification and tested their accuracy by optimizing the hyperparameters. We mainly tried Python [@Python]'s Scikit Learn's [@scikit-learn] [Logistic Regression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html), [Random Forest](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html) & [Light Gradient Boosting](https://lightgbm.readthedocs.io/en/latest/Python-Intro.html). The best accuracy on the validation data was achieved by `LGBM`, therefore we went ahead with automating the entire analysis using `LGBM` only.  
 
 > We conducted our Exploratory Data Analysis (EDA), in R [@R] and found that the customers who made an online purchase were a small fraction of all the users, ~$15$%). Due to this, there was a possibility of facing the class imbalance issue. To address the potential class imbalance, we included the oversampling strategy (`None`: No oversampling and `balanced`: automatically balancing the weights inversely propotional to the class frequencies) provided by `LGBM` in our hyper-parameter optimization and the modeling framework to automatically decide the most optimal oversampling strategy.  
 
-> From the initial EDA, we also saw that the variables had a highly skewed distribution with many outliers. Due to this challenge, we preprocessed the data using [Quantile Transformation](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.QuantileTransformer.html) (`sklearn.preprocessing.QuantileTransformation()`) provided by Scikit Learn. This method transforms the individual explanatory variables to follow a normal distribution. This transformation is a robust preprocessing technique and reduces the impact of outliers present in the data.  
+> From the initial EDA, we also saw that the variables had a highly skewed distribution with many outliers. Due to this challenge, we preprocessed the data using [Quantile Transformation](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.QuantileTransformer.html) provided by Scikit Learn. This method transforms the individual explanatory variables to follow a normal distribution. This transformation is a robust preprocessing technique and reduces the impact of outliers present in the data.  
 
 
 # Results
