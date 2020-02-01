@@ -143,8 +143,10 @@ knitr::include_graphics("../results/img/corr_plot.png")
 
 > We conducted our Exploratory Data Analysis (EDA), in R [@R] and found that the customers who made an online purchase were a small fraction of all the users, ~$15$%). Due to this, there was a possibility of facing the class imbalance issue. To address the potential class imbalance, we included the oversampling strategy (`None`: No oversampling and `balanced`: automatically balancing the weights inversely propotional to the class frequencies) provided by `LGBM` in our hyper-parameter optimization and the modeling framework to automatically decide the most optimal oversampling strategy.  
 
-> From the initial EDA, we also saw that the variables had a highly skewed distribution with many outliers. Due to this challenge, we preprocessed the data using [Quantile Transformation](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.QuantileTransformer.html) provided by Scikit Learn. This method transforms the individual explanatory variables to follow a normal distribution. This transformation is a robust preprocessing technique and reduces the impact of outliers present in the data.  
+> From the initial EDA, we also saw that the variables had a highly skewed distribution with many outliers. Due to this challenge, we preprocessed the data using [Quantile Transformation](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.QuantileTransformer.html) provided by Scikit Learn. This method transforms the individual explanatory variables to follow a normal distribution. This transformation is a robust preprocessing technique and reduces the impact of outliers present in the data. 
 
+#### Analysis Packages
+Both R [@R] and Python [@Python] were used throughout this project along with the following R and Python packages: docopt for python [@docoptpython], tidyverse [@tidyverse], knitr [@knitr], here [@here], carat [@carat], gridExtra [@gridExtra], docopt for R [@docopt], numpy [@oliphant2006guide], scikit-learn [@scikit-learn], data.table [@data.table], plotly [@plotly], cowplot [@cowplot] and scales [@scales].
 
 # Results
 ## Hyperparameters and Feature Importance

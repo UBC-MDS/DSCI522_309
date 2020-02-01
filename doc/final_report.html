@@ -598,6 +598,10 @@ Correlation Matrix
 <blockquote>
 <p>From the initial EDA, we also saw that the variables had a highly skewed distribution with many outliers. Due to this challenge, we preprocessed the data using <a href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.QuantileTransformer.html">Quantile Transformation</a> provided by Scikit Learn. This method transforms the individual explanatory variables to follow a normal distribution. This transformation is a robust preprocessing technique and reduces the impact of outliers present in the data.</p>
 </blockquote>
+<div id="analysis-packages" class="section level4">
+<h4>Analysis Packages</h4>
+<p>Both R <span class="citation">(R Core Team 2019)</span> and Python <span class="citation">(Van Rossum and Drake 2009)</span> were used throughout this project along with the following R and Python packages: docopt for python <span class="citation">(Keleshev 2014)</span>, tidyverse <span class="citation">(Wickham 2017)</span>, knitr <span class="citation">(Xie 2014)</span>, here <span class="citation">(Müller 2017)</span>, carat <span class="citation">(Kuhn 2020)</span>, gridExtra <span class="citation">(Auguie 2017)</span>, docopt for R <span class="citation">(de Jonge 2018)</span>, numpy <span class="citation">(Oliphant 2006)</span>, scikit-learn <span class="citation">(Pedregosa et al. 2011)</span>, data.table <span class="citation">(Dowle and Srinivasan 2019)</span>, plotly <span class="citation">(Sievert 2018)</span>, cowplot <span class="citation">(Wilke 2019)</span> and scales <span class="citation">(Wickham 2018)</span>.</p>
+</div>
 </div>
 </div>
 <div id="results" class="section level1">
@@ -748,8 +752,29 @@ Test
 <div id="references" class="section level1 unnumbered">
 <h1>References</h1>
 <div id="refs" class="references">
+<div id="ref-gridExtra">
+<p>Auguie, Baptiste. 2017. <em>GridExtra: Miscellaneous Functions for &quot;Grid&quot; Graphics</em>. <a href="https://CRAN.R-project.org/package=gridExtra">https://CRAN.R-project.org/package=gridExtra</a>.</p>
+</div>
+<div id="ref-docopt">
+<p>de Jonge, Edwin. 2018. <em>Docopt: Command-Line Interface Specification Language</em>. <a href="https://CRAN.R-project.org/package=docopt">https://CRAN.R-project.org/package=docopt</a>.</p>
+</div>
+<div id="ref-data.table">
+<p>Dowle, Matt, and Arun Srinivasan. 2019. <em>Data.table: Extension of ‘Data.frame‘</em>. <a href="https://CRAN.R-project.org/package=data.table">https://CRAN.R-project.org/package=data.table</a>.</p>
+</div>
 <div id="ref-Dua">
 <p>Dua, Dheeru, and Casey Graff. 2019. “UCI Machine Learning Repository.” University of California, Irvine, School of Information; Computer Sciences. <a href="http://archive.ics.uci.edu/ml">http://archive.ics.uci.edu/ml</a>.</p>
+</div>
+<div id="ref-docoptpython">
+<p>Keleshev, Vladimir. 2014. <em>Docopt: Command-Line Interface Description Language</em>. <a href="https://github.com/docopt/docopt">https://github.com/docopt/docopt</a>.</p>
+</div>
+<div id="ref-carat">
+<p>Kuhn, Max. 2020. <em>Caret: Classification and Regression Training</em>. <a href="https://CRAN.R-project.org/package=caret">https://CRAN.R-project.org/package=caret</a>.</p>
+</div>
+<div id="ref-here">
+<p>Müller, Kirill. 2017. <em>Here: A Simpler Way to Find Your Files</em>. <a href="https://CRAN.R-project.org/package=here">https://CRAN.R-project.org/package=here</a>.</p>
+</div>
+<div id="ref-oliphant2006guide">
+<p>Oliphant, Travis E. 2006. <em>A Guide to Numpy</em>. Vol. 1. Trelgol Publishing USA.</p>
 </div>
 <div id="ref-scikit-learn">
 <p>Pedregosa, F., G. Varoquaux, A. Gramfort, V. Michel, B. Thirion, O. Grisel, M. Blondel, et al. 2011. “Scikit-Learn: Machine Learning in Python.” <em>Journal of Machine Learning Research</em> 12: 2825–30.</p>
@@ -760,8 +785,23 @@ Test
 <div id="ref-sakar2019real">
 <p>Sakar, C Okan, S Olcay Polat, Mete Katircioglu, and Yomi Kastro. 2019. “Real-Time Prediction of Online Shoppers’ Purchasing Intention Using Multilayer Perceptron and Lstm Recurrent Neural Networks.” <em>Neural Computing and Applications</em> 31 (10). Springer: 6893–6908.</p>
 </div>
+<div id="ref-plotly">
+<p>Sievert, Carson. 2018. <em>Plotly for R</em>. <a href="https://plotly-r.com">https://plotly-r.com</a>.</p>
+</div>
 <div id="ref-Python">
 <p>Van Rossum, Guido, and Fred L. Drake. 2009. <em>Python 3 Reference Manual</em>. Scotts Valley, CA: CreateSpace.</p>
+</div>
+<div id="ref-tidyverse">
+<p>Wickham, Hadley. 2017. <em>Tidyverse: Easily Install and Load the ’Tidyverse’</em>. <a href="https://CRAN.R-project.org/package=tidyverse">https://CRAN.R-project.org/package=tidyverse</a>.</p>
+</div>
+<div id="ref-scales">
+<p>———. 2018. <em>Scales: Scale Functions for Visualization</em>. <a href="https://CRAN.R-project.org/package=scales">https://CRAN.R-project.org/package=scales</a>.</p>
+</div>
+<div id="ref-cowplot">
+<p>Wilke, Claus O. 2019. <em>Cowplot: Streamlined Plot Theme and Plot Annotations for ’Ggplot2’</em>. <a href="https://CRAN.R-project.org/package=cowplot">https://CRAN.R-project.org/package=cowplot</a>.</p>
+</div>
+<div id="ref-knitr">
+<p>Xie, Yihui. 2014. “Knitr: A Comprehensive Tool for Reproducible Research in R.” In <em>Implementing Reproducible Computational Research</em>, edited by Victoria Stodden, Friedrich Leisch, and Roger D. Peng. Chapman; Hall/CRC. <a href="http://www.crcpress.com/product/isbn/9781466561595">http://www.crcpress.com/product/isbn/9781466561595</a>.</p>
 </div>
 </div>
 </div>
