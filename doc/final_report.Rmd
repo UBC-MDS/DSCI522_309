@@ -128,6 +128,14 @@ include_graphics("../results/img/cat_vars_dist_plot.png")
 include_graphics("../results/img/num_vars_dist_plot.png")
 ```
 
+### Correlation Matrix 
+>The heatmap below displays the correlation between the outcome, `Revenue`, and all the predictor variables. In addition it shows the correlations between each of the predictors. 
+
+```{r correlation matrix, fig.cap="Correlation Matrix", out.height='50%', out.width='50%', fig.align="center"}
+knitr::include_graphics("../results/img/corr_plot.png")
+```
+
+
 
 ## Modelling  
 
