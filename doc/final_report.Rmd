@@ -57,7 +57,7 @@ f1 <- round(2*precision*recall/(precision + recall), digits = 3)
 
 # Project Summary
 
-> Here we attempt to build a classification model using the light gradient boosting algorithm which can use webpage metrics from a given online shopping website to predict whether the revenue of a new customer is True (i.e., the customer makde a purchase) or False (i.e., the customer did not make a purchase). Our final classifier performed well on an unseen test data set, with the F1 score of `r f1` and the test accuray calculated to be `r clf_rate`%. The precision and recall of our classifier on the test set are `r round(precision, digits=3)` and `r round(recall, digits=3)` respectively. Due to substantially high number of false positives & negatives, we recommend further iteration to improve this model.  
+> Here we attempt to build a classification model using the light gradient boosting algorithm which can use webpage metrics from a given online shopping website to predict whether the final action of a new customer is purchasing (i.e., Revenue is TRUE) or not (i.e., Revenue is FALSE). Our final classifier performed well on an unseen test data set, with the F1 score of `r f1` and the test accuray calculated to be `r clf_rate`%. The precision and recall of our classifier on the test set are `r round(precision, digits=3)` and `r round(recall, digits=3)` respectively. Due to substantially high number of false positives & negatives, we recommend further iteration to improve this model.
 
 
 # Introduction
