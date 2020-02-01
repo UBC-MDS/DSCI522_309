@@ -78,6 +78,7 @@ make clean
   - testthat==2.3.1
   - data.table==1.12.6
   - here==0.1
+- GNU make 4.2.1
   
 ## License
 The Online Shopping Intention Predictor materials here are licensed under the Creative Commons Attribution 2.5 Canada License (CC BY 2.5 CA). If re-using/re-mixing please provide attribution and link to this webpage.

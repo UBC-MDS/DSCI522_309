@@ -64,6 +64,7 @@ root directory of this project:
       - testthat==2.3.1
       - data.table==1.12.6
       - here==0.1
+  - GNU make 4.2.1
 
 ## License
 
