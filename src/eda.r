@@ -81,7 +81,7 @@ main <- function(input_dir, out_dir) {
     labs(
       title = "Distributions of the numerical variables",
       x = "",
-      y = ""
+      y = "Log Scaled Value"
     ) + 
     theme_bw()
   
