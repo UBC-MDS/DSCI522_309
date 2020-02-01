@@ -153,7 +153,7 @@ kableExtra::kable_styling(kable(hyperpara_df,
       caption = "Best Hyperparameters"), full_width = F)
 ```
 
-> **Feature Importance**: A question of interest for an online retailer might be which variables are most strongly associated with predicting a sale or not. The plot below displays the top ten most important features for making a prediction. The top predictor is `ExitRate` which intuitively makes some sense. This variable is related to how fast a shopper is leaving the website and so it follows that it would have a strong association with classifying sales. The second most important predictor is `ProductRealted_Duration` which has to do with how long a shopper spent on a product related page. Not suprisingly then, the third most important predictor is the `ProductRelated` variable which measures the number of product related pages the user visited while on the site. 
+> **Feature Importance**: A question of interest for an online retailer might be which variables are most strongly associated with predicting a sale or not. The plot below displays the top ten most important features for making a prediction. The top predictors include `ExitRate` which intuitively makes some sense. This variable is related to how fast a shopper is leaving the website and so it follows that it would have a strong association with classifying sales. The other important predictors include `ProductRealted_Duration` which has to do with how long a shopper spent on a product related page and `ProductRelated` variable which measures the number of product related pages the user visited while on the site. 
 
 ```{r feature importance, fig.align="center", out.height='70%', out.width='70%'}
 
