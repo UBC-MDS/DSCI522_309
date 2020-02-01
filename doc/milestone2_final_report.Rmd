@@ -34,12 +34,31 @@ performance_train <- read_csv("results/metric_by_threshold_train.csv")
 performance_test <- read_csv("results/metric_by_threshold_test.csv")
 X_train_pred <- read_csv("results/Training_pred.csv")
 X_test_pred <- read_csv("results/Test_pred.csv")
+
+# train data metrics
+clf_rate_tr <- round(sum(X_train_pred$skl_predict==X_train_pred$Revenue)/nrow(X_train_pred), digits = 3)*100
+miss_clf_rate_tr <- 1 - clf_rate_tr
+
+precision_tr <- nrow(X_train_pred %>% filter(skl_predict==TRUE & Revenue==TRUE))/nrow(X_train_pred %>% filter(skl_predict==TRUE))
+recall_tr <- nrow(X_train_pred %>% filter(skl_predict==TRUE & Revenue==TRUE))/nrow(X_train_pred %>% filter(Revenue==TRUE))
+f1_tr <- round(2*precision_tr*recall_tr/(precision_tr + recall_tr), digits = 3)
+
+precision_tr <- round(precision_tr, digits = 3)
+
+# test data metrics
+clf_rate <- round(sum(X_test_pred$skl_predict==X_test_pred$Revenue)/nrow(X_test_pred), digits = 3)*100
+miss_clf_rate <- 1 - clf_rate
+
+precision <- nrow(X_test_pred %>% filter(skl_predict==TRUE & Revenue==TRUE))/nrow(X_test_pred %>% filter(skl_predict==TRUE))
+recall <- nrow(X_test_pred %>% filter(skl_predict==TRUE & Revenue==TRUE))/nrow(X_test_pred %>% filter(Revenue==TRUE))
+f1 <- round(2*precision*recall/(precision + recall), digits = 3)
+
 ```
 
 
 # Project Summary
 
-> Here we attempt to build a classification model using the light gradient boosting algorithm which can use webpage metrics from a given online shopping website to predict whether the revenue of a new customer is True (i.e., the customer makde a purchase) or False (i.e., the customer did not make a purchase). Our final classifier performed well on an unseen test data set, with the F1 score of `r` and the test accuray calculated to be `r`. The precision and recall of our classifier on the test set are `r` and `r` respectively. On the `r` test data cases, it correctly predicted `r`. However it incorrectly predicted `r` cases. (and these cases were FN?: predicting that a customer to purchase something when in fact no purchasing occurs). Due to the high percentage of incorrect prediction in false negative, we recommend further iteration to improve this model.
+> Here we attempt to build a classification model using the light gradient boosting algorithm which can use webpage metrics from a given online shopping website to predict whether the revenue of a new customer is True (i.e., the customer makde a purchase) or False (i.e., the customer did not make a purchase). Our final classifier performed well on an unseen test data set, with the F1 score of `r f1` and the test accuray calculated to be `r clf_rate`%. The precision and recall of our classifier on the test set are `r round(precision, digits=3)` and `r round(recall, digits=3)` respectively. Due to substantially high number of false positives & negatives, we recommend further iteration to improve this model.  
 
 
 # Introduction
@@ -115,14 +134,14 @@ include_graphics("../results/img/num_vars_dist_plot.png")
 
 > Here we attempted to build a binary classifer that would predict whether an online shopper made a purchase or not. Since this is a classification problem we tried Machine Learning models that are good for classification and tested their accuracy by optimizing the hyperparameters. We mainly tried Python [@Python]'s Scikit Learn's [@scikit-learn] [Logistic Regression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html)(`sklearn.linear_model.LogisticRegression()`), [Random Forest](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html) (`sklearn.ensemble.RandomForest()`) & [Light Gradient Boosting](https://lightgbm.readthedocs.io/en/latest/Python-Intro.html) (`lightgbm.LGBMClassifier()`). The best accuracy on the validation data was achieved by `LGBM`, therefore we went ahead with automating the entire analysis using `LGBM` only.  
 
-> We conducted our Exploratory Data Analysis (EDA), in R [@R] and found that the customers who made an online purchase were a small fraction of all the users, ~$15$%). Due to this, there was a possibility of facing the class imbalance issue. To address the potential class imbalance, we included the oversampling strategy (`None`: No oversampling and `balanced`: automatically) balancing the weights inversely propotional to the class frequencies) provided by `LGBM` in our hyper-parameter optimization and the modeling framework to automatically decide the most optimal oversampling strategy.  
+> We conducted our Exploratory Data Analysis (EDA), in R [@R] and found that the customers who made an online purchase were a small fraction of all the users, ~$15$%). Due to this, there was a possibility of facing the class imbalance issue. To address the potential class imbalance, we included the oversampling strategy (`None`: No oversampling and `balanced`: automatically balancing the weights inversely propotional to the class frequencies) provided by `LGBM` in our hyper-parameter optimization and the modeling framework to automatically decide the most optimal oversampling strategy.  
 
 > From the initial EDA, we also saw that the variables had a highly skewed distribution with many outliers. Due to this challenge, we preprocessed the data using [Quantile Transformation](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.QuantileTransformer.html) (`sklearn.preprocessing.QuantileTransformation()`) provided by Scikit Learn. This method transforms the individual explanatory variables to follow a normal distribution. This transformation is a robust preprocessing technique and reduces the impact of outliers present in the data.  
 
 
 # Results
 ## Hyperparameters and Feature Importance
->**Hyperparameters**: The table below displays the best hyperparameters for `LGBM` after performing grid search. The optimal model had a max depth of 5 and 100 tree estimators. 
+>**Hyperparameters**: The table below displays the best hyperparameters for `LGBM` after performing grid search. The optimal model had a max depth of `r hyperpara$X2[2]` and `r hyperpara$X2[3]` tree estimators. 
 
 ```{r best hyperparam}
 hyperpara_df <- tribble(
@@ -206,7 +225,8 @@ plot_grid(confusion_train_plot, confusion_test_plot)
 
 ```
 
-> **Precision & Recall**: The model metrics table below details the performance of the model when classifying a sale or no sale on both the training and the testing data. For the training data, the precision of the model is ~ 86% with 1,128 of the 1,213  predicted sales correctly labled. The recall is quite a bit lower with the model able to identify only ~71% of the true sales. For testing data these corresponding scores are even lower. On the test set, out of the 292 predicted sales, only 71% were correctly identified; and out of the 347 true sales the model could only identify ~ 60%.
+
+> **Precision & Recall**: The model metrics table below details the performance of the model when classifying a sale or no sale on both the training and the testing data. For the training data, the precision of the model is more than ~85%. The recall is quite a bit lower with the model able to identify around 70% of the true sales. For testing data these corresponding scores are even lower. On the test set, out of the all the predicted sales, more than 65% were correctly identified; and out of the all the true sales the model could only identify ~ 60%.  
 
 ```{r model eval metrics train, fig.align='left'}
 # table of model evaluation scores

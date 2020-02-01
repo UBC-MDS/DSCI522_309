@@ -33,6 +33,12 @@ main <- function(input_dir, out_dir) {
   num_vars_2 <- c("Administrative_Duration", "Informational_Duration", "ProductRelated_Duration", 
                   "BounceRates", "ExitRates", 
                   "PageValues", "ProductRelated")
+
+  num_vars_2_units <- c("sec", "sec", "sec", 
+                  "percent", "percent", 
+                  "dollars", "Count")
+  units <- tibble(num_vars = num_vars_2, num_vars_2_units=num_vars_2_units)
+
   target <- "Revenue"
   cat_vars <- setdiff(names(mydata), c(num_vars_1, num_vars_2, target))
   
@@ -59,11 +65,18 @@ main <- function(input_dir, out_dir) {
   saveRDS(cat_vars_expo, paste0(out_dir, "/cat_vars_expo.rds"))
   
   # Save the distribution plot for numerical variables
-  num_vars_dist_plot <- mydata %>% 
+  temp <- mydata %>% 
     select(num_vars_2, Revenue) %>% 
     gather("num_vars", "values", -Revenue) %>% 
+    mutate(values = values+0.001) 
+
+  temp <- left_join(temp, units)  
+  temp <- temp %>% mutate(num_vars = paste(num_vars, num_vars_2_units, sep=", "))
+
+  num_vars_dist_plot <- temp %>%
     ggplot(aes(y=values, x=Revenue)) +
     geom_violin(mapping = aes(fill = Revenue),  show.legend = FALSE) +
+    scale_y_log10(labels = scales::comma) + 
     facet_wrap(~num_vars, scales = "free", nrow = 3) +
     labs(
       title = "Distributions of the numerical variables"
