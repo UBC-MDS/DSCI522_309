@@ -42,8 +42,8 @@ clean :
 	rm -f results/*.csv
 	rm -f results/*.rds
 	rm -f results/img/*.png
-	rm -f doc/milestone2_final_report.html
+	rm -f doc/final_report.html
 
 clean_part :
 	rm -f results/img/*.png
-	rm -f doc/milestone2_final_report.html
+	rm -f doc/final_report.html
