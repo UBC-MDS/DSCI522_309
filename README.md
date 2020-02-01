@@ -8,13 +8,13 @@
 Here we attempt to build a classification model using the light gradient
 boosting algorithm which can use webpage metrics from a given online
 shopping website to predict whether the revenue of a new customer is
-True (i.e., the customer purchased something) or False (i.e., the
-customer did not purchase anything). Our final classifier performed well
-on an unseen test data set, with the f1 score of more than \(0.6\) and
-the test accuray of \~\(90\)%. The precision and recall of our
-classifier on the test set are also around \(0.6\).However, because of
-the small target frequency we have a high percentage of incorrect
-prediction in FN, we plan to further investigate & improve our model.
+True (i.e., the customer makde a purchase) or False (i.e., the customer
+did not make a purchase). Our final classifier performed well on an
+unseen test data set, with the F1 score of 0.655 and the test accuray
+calculated to be 91.2%. The precision and recall of our classifier on
+the test set are 0.709 and 0.609 respectively. Due to substantially high
+number of false positives & negatives, we recommend further iteration to
+improve this model.
 
 The data set used in this project is of online shopping webpage metrics
 created by C. Okan Sakar, S. Olcay Polat, Mete Katircioglu & Yomi
@@ -30,7 +30,7 @@ time to a special day, etc.).
 ## Report
 
 The final report can be found
-[here](https://ubc-mds.github.io/DSCI522_309/doc/milestone2_final_report.html).
+[here](https://ubc-mds.github.io/DSCI522_309/doc/final_report.html).
 
 ## Usage
 

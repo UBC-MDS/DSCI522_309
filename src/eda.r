@@ -79,7 +79,9 @@ main <- function(input_dir, out_dir) {
     scale_y_log10(labels = scales::comma) + 
     facet_wrap(~num_vars, scales = "free", nrow = 3) +
     labs(
-      title = "Distributions of the numerical variables"
+      title = "Distributions of the numerical variables",
+      x = "",
+      y = ""
     ) + 
     theme_bw()
   
