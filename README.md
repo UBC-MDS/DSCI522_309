@@ -10,10 +10,10 @@ boosting algorithm which can use webpage metrics from a given online
 shopping website to predict whether the final action of a new customer
 is purchasing (i.e., Revenue is TRUE) or not (i.e., Revenue is FALSE).
 Our final classifier performed well on an unseen test data set, with the
-F1 score of 0.655 and the test accuray calculated to be 91.2%. The
-precision and recall of our classifier on the test set are 0.709 and
-0.609 respectively. Due to substantially high number of false positives
-& negatives, we recommend further iteration to improve this model.
+F1 score of 0.646 and the test accuray calculated to be 90.9%. The
+precision and recall of our classifier on the test set are 0.699 and 0.6
+respectively. Due to substantially high number of false positives &
+negatives, we recommend further iteration to improve this model.
 
 The data set used in this project is of online shopping webpage metrics
 created by C. Okan Sakar, S. Olcay Polat, Mete Katircioglu & Yomi
@@ -31,39 +31,70 @@ time to a special day, etc.).
 The final report can be found
 [here](https://ubc-mds.github.io/DSCI522_309/doc/final_report.html).
 
-## Usage
+### Usage:
 
-To replicate the analysis, clone this GitHub repository, install the
-[dependencies](#dependencies) listed below, and run the following
-command at the command line/terminal from the root directory of this
-project:
+To replicate the analysis, there are two suggested ways to run this
+analysis:
+
+#### 1\. Using Docker
+
+*note - the instructions in this section also depends on running this in
+a unix shell (e.g., terminal or Git Bash), if you are using Windows
+Command Prompt, replace `/$(pwd)` with PATH\_ON\_YOUR\_COMPUTER.*
+
+1.  Install [Docker](https://www.docker.com/get-started)
+2.  Download/clone this repository
+3.  Use the command line to navigate to the root of this
+    downloaded/cloned repo
+4.  Type the
+    following:
+
+<!-- end list -->
+
+    docker run --rm -v /$(pwd):"/DSCI522_309" chengmin/dsci522-group309:v1.0 bash -c "make -C /DSCI522_309 all"
+
+5.  To reset/undo the analysis, type the
+    following:
+
+<!-- end list -->
+
+    docker run --rm -v /$(pwd):"/DSCI522_309" chengmin/dsci522-group309:v1.0 bash -c "make -C /DSCI522_309 clean"
+
+#### 2\. After installing all [dependencies](#dependencies) (does not depend on Docker)
+
+1.  Clone this repo, and using the command line, navigate to the root of
+    this project.
+2.  To run the analysis, type the following commands:
+
+<!-- end list -->
 
     make all
 
-To reset the repo to a clean state, with no intermediate or results
-files, run the following command at the command line/terminal from the
-root directory of this project:
+3.  To reset/undo the analysis, type the following commands:
+
+<!-- end list -->
 
     make clean
 
 ## Dependencies
 
-  - Python 3.7.3 and Python packages:
+  - Python 3.7.4 and Python packages:
       - docopt==0.6.2
-      - pandas==0.24.2
+      - pandas==1.0.0
       - numpy==1.17.2
       - sklearn==0.22.1
-      - lightgbm==2.3.2
-  - R version 3.6.1 and R packages:
-      - knitr==1.26
-      - tidyverse==1.2.1
-      - caret==6.0.84
+      - lightgbm==2.3.0
+  - R version 3.6.2 and R packages:
+      - knitr==1.27
+      - tidyverse==1.3.0
+      - caret==6.0.85
       - kableExtra==1.1.0
       - scales==1.1.0
       - docopt==0.6.1
       - testthat==2.3.1
-      - data.table==1.12.6
+      - data.table==1.12.8
       - here==0.1
+      - pheatmap==1.0.12
   - GNU make 4.2.1
 
 ## License
