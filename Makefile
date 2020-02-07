@@ -32,8 +32,12 @@ results/img/cat_vars_dist_plot.png results/img/corr_plot.png results/img/num_var
 results/Feature_Imp.csv results/GridSearchCV.csv results/metric_by_threshold_test.csv results/metric_by_threshold_train.csv results/ROC_test_data.csv results/ROC_train_data.csv results/Test_pred.csv results/Training_pred.csv:  data/processed/X_train.csv data/processed/X_test.csv data/processed/y_train.csv data/processed/y_test.csv src/Modeling.py
 	python src/Modeling.py --datapath=data/processed --out_dir=results
 
+# render appendix
+doc/Appendix.html : doc/Appendix.Rmd
+	Rscript -e "rmarkdown::render('doc/Appendix.Rmd')"
+
 # render report	
-doc/final_report.html : doc/final_report.Rmd results/img/cat_vars_dist_plot.png results/img/num_vars_dist_plot.png results/Feature_Imp.csv results/GridSearchCV.csv results/metric_by_threshold_test.csv results/metric_by_threshold_train.csv results/ROC_test_data.csv results/ROC_train_data.csv results/Test_pred.csv results/Training_pred.csv doc/citations.bib
+doc/final_report.html : doc/final_report.Rmd doc/Appendix.html results/img/cat_vars_dist_plot.png results/img/num_vars_dist_plot.png results/Feature_Imp.csv results/GridSearchCV.csv results/metric_by_threshold_test.csv results/metric_by_threshold_train.csv results/ROC_test_data.csv results/ROC_train_data.csv results/Test_pred.csv results/Training_pred.csv doc/citations.bib
 	Rscript -e "rmarkdown::render('doc/final_report.Rmd')"
 
 # Clean up intermediate and results files
@@ -43,7 +47,9 @@ clean :
 	rm -f results/*.rds
 	rm -f results/img/*.png
 	rm -f doc/final_report.html
+	rm -f doc/Appendix.html
 
 clean_part :
 	rm -f results/img/*.png
 	rm -f doc/final_report.html
+	rm -f doc/Appendix.html
