@@ -116,14 +116,26 @@ main <- function(input_dir, out_dir) {
   y_train <- read_csv(paste0(input_dir, "/y_train.csv"))
   
   training <- cbind(X_train, y_train)
-  
-  corr_plot <- training %>% 
+
+  corr_mat <- training %>% 
     select(num_vars_1, num_vars_2, Revenue) %>% 
-    cor() %>% 
-    pheatmap(cluster_cols = F, cluster_rows = F,
-            main = "Correlation between target and numerical variables",
-            fontsize = 7, angle_col = 315)
-  
+    cor()
+
+  corr_mat[lower.tri(corr_mat)] <- NA
+
+  melt_corr_mat <- melt(corr_mat, na.rm=TRUE)
+  melt_corr_mat <- melt_corr_mat %>% filter(Var1!=Var2)
+
+  corr_plot <- melt_corr_mat %>%
+    ggplot(aes(Var2, Var1, fill = value))+
+    geom_tile(color = "white")+
+    scale_fill_gradient(low = "#56B1F7", high = "#132B43", name="Pearson\nCorrelation") +
+    labs(x="", y="")+
+    ggtitle("Correlation between target and numerical variables")+
+    theme_minimal()+ 
+    theme(axis.text.x = element_text(angle = 45, vjust = 1, size = 12, hjust = 1), axis.text.y = element_text(size = 12))+
+    coord_fixed()
+
   ggsave(paste0(out_dir, "/img/corr_plot.png"), corr_plot)
 }
 
