@@ -1,0 +1,33 @@
+---
+title: "Predicting Online Sales from Webpage Analytics (Appendix)"
+always_allow_html: true
+output: 
+   html_document
+---
+
+### Variable Description
+[Data Source Here](https://archive.ics.uci.edu/ml/datasets/Online+Shoppers+Purchasing+Intention+Dataset)
+
+
+| No. | Variable | Description |
+| ----------- | ----------- | ----------- |
+| 1 | `Administrative` | Number of Distinct administrative pages |
+| 2 | `Informational` | Number of Distinct Informational pages |
+| 3 | `ProductRelated` | Number of Distinct Product Related pages |
+| 4 | `Administrative_Duration` | Time(in seconds) spent on Administrative pages |
+| 5 | `Informational_Duration` | Time(in seconds) spent on Informational pages |
+| 6 | `ProductRelated_Duration` | Time(in seconds) spent on Product Related pages |
+| 7 | `BounceRates` | Average bounce rate of all web-pages visited by user. For a web-page its the percentage of people who visit the website from that webpage and left without raising any other request |
+| 8 | `ExitRates` | Average exit rate of all web-pages visited by user: For a web-page its the percentage of people who exited the website from that webpage |
+| 9 | `PageValues` | Average page value of all web-pages visited by user: For a web-page its the average dollar-value of that page which the user visited before completing the transaction |
+| 10 | `SpecialDay` | The closeness of site visitng time to a special day (higher chances of a session resulting in a transaction) |
+| 11 | `OperatingSystems` | Operating system used by the user |
+| 12 | `Month` | Month of Year |
+| 13 | `Browser` | Browser used by the user |
+| 14 | `Region` | Geographic region |
+| 15 | `TrafficType` | Type of Channel user by the user to arrive at the website |
+| 16 | `VisitorType` | Type of the visitor |
+| 17 | `Weekend` | Weekend indicator |
+| 18 | `Revenue` | Revenue transaction indicator |
+
+
