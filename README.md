@@ -31,6 +31,15 @@ time to a special day, etc.).
 The final report can be found
 [here](https://ubc-mds.github.io/DSCI522_309/doc/final_report.html).
 
+### Diagrams
+
+The dependency diagram below illustrates script orders and dependencies
+for our Makefile and was created using `makefile2graph`, click
+[here](https://ubc-mds.github.io/DSCI522_309/results/img/Makefile.png)
+for the original graph:
+
+![](results/img/Makefile.png)
+
 ### Usage:
 
 To replicate the analysis, there are two suggested ways to run this
