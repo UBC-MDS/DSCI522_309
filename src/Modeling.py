@@ -24,10 +24,18 @@ from docopt import docopt
 opt = docopt(__doc__)
 
 def main(input_url, out_dir):
-    # Check the out_dir
+    # Check the input_url & out_dir 
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
-    print(input_url + '/X_train.csv')
+
+    assert os.path.exists(input_url), "Input Folder Does Not Exist!"
+
+    assert np.DataSource().exists(input_url + '/X_train.csv'), "File Does Not Exist, please check premodeling scripts"
+    assert np.DataSource().exists(input_url + '/X_test.csv'), "File Does Not Exist, please check premodeling scripts"
+
+    assert np.DataSource().exists(input_url + '/y_train.csv'), "File Does Not Exist, please check premodeling scripts"
+    assert np.DataSource().exists(input_url + '/y_test.csv'), "File Does Not Exist, please check premodeling scripts"
+
 
     # Read the data from the raw data
     X_train = pd.read_csv(input_url + '/X_train.csv')
@@ -35,6 +43,13 @@ def main(input_url, out_dir):
 
     X_test = pd.read_csv(input_url + '/X_test.csv')
     y_test = pd.read_csv(input_url + '/y_test.csv')
+
+    assert X_train.shape[1]>1 and X_train.shape[0]>1, "Invalid File"
+    assert X_test.shape[1]>1 and X_test.shape[0]>1, "Invalid File"
+
+    assert y_train.shape[1]==1 and y_train.shape[0]>1, "Invalid File"
+    assert y_test.shape[1]==1 and y_test.shape[0]>1, "Invalid File"
+
 
     # Separate numerical and categorical varibles
     target = "Revenue"
