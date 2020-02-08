@@ -35,8 +35,8 @@ The final report can be found
 
 The dependency diagram below illustrates script orders and dependencies
 for our Makefile and was created using `makefile2graph`, click
-[here](tps://ubc-mds.github.io/DSCI522_309/results/img/Makefile.png) for
-the original graph:
+[here](https://ubc-mds.github.io/DSCI522_309/results/img/Makefile.png)
+for the original graph:
 
 ![](results/img/Makefile.png)
 
