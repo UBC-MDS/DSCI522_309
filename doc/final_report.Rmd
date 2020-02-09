@@ -110,9 +110,9 @@ include_graphics("../results/img/num_vars_dist_plot.png")
 ```
 
 ### Correlation Matrix 
->The heatmap below displays the correlation between the outcome, `Revenue`, and all the predictor variables. In addition it shows the correlations between each of the predictors. Strong correlations can be observed between `Revenue` & `PageValues` and between page count & duration of pages. 
+>The heatmap below displays the correlation between the outcome, `Revenue`, and all the predictor variables. The most positively correlated are dark blue while the negatively correlated variables are progressively lighter blue. In addition, it shows the correlations between each of the predictors. Strong correlations can be observed between `Revenue` & `PageValues` and between page count & duration of pages. Several variables are either not correlated or only weakly correlated. But others ariables, like the page type `Administrative` is strongly correlated with the the time spent on the `Administrative` page coded as `Administrative_Duration`. This is also true of the other page types, `Informational` and `Product Related`. These too, are highly correlated with the time spent on them which intuitively makes sense. `PageValues` which is the average dollar value of the page, is the most positively correlated with `Revenue`; while `Exit Rates` and `Bounce Rates` have slight negative correlation with `Revenue`. 
 
-```{r correlation matrix, fig.cap="Figure 3, Correlation Matrix", out.height='50%', out.width='50%', fig.align="center"}
+```{r correlation matrix, fig.cap="Figure 3, Correlation Matrix", out.height='70%', out.width='70%', fig.align="center"}
 knitr::include_graphics("../results/img/corr_plot.png")
 ```
 
@@ -247,7 +247,7 @@ roc %>%
 ```
 
 ## Choosing an Optimal Threshold
->**Effect of Threshold on Performance**: Deciding the threshold of the predicted probability for classification requires human intervention because sometimes the objective is not only maximizing the accuracy. For e.g. a business might want to decide a threshold that minimizes their cost which is a function of (True/False Positive/Negative). Therefore, we are producing this output which highlights how the performance of the model will change by changing the threshold which can help the stakeholders decide on the optimum threshold. 
+>**Effect of Threshold on Performance**: As evidenced by ROC curve in Fig. 6, an online retailer may want to manually adjust the threshold for determining if an observation is classifed as a `SALE`. The decision for an optimal threshold is highly dependent on whether a retailer cares more about the precision or recall of the model. Our model optimizes the F1 score which is a balance of the precision and recall and can be seen as the point in Figure 7 where all three curves meet. However, an online retailer may prefer to have a more precise model and will thus decrease the recall. Or a retailer may prefer to have a high recall system which then reduces the precision of the model. Figure 7 illustrates how a retailer may want to adjust the the model threshold in order to optimize their business objectives. 
 
 ```{R performance, fig.cap="Figure 7, Optimal Threshold", fig.height = 8}
 perf_curve_train <- performance_train %>%
