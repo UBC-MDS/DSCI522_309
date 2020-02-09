@@ -38,7 +38,7 @@ for our Makefile and was created using `makefile2graph`, click
 [here](https://ubc-mds.github.io/DSCI522_309/results/img/Makefile.png)
 for the original graph:
 
-<img src="results/img/Makefile.png" width="1200" height="500"/>
+![](results/img/Makefile.png)
 
 ### Usage:
 
